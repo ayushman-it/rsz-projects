@@ -1,0 +1,10 @@
+<svg width="800" height="520" viewBox="0 0 800 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="520" fill="#F4F1EB"/>
+  <rect x="280" y="70" width="240" height="370" fill="#131313"/>
+  <rect x="302" y="92" width="196" height="326" fill="#F8F5EF"/>
+  <line x1="302" y1="220" x2="498" y2="220" stroke="#131313" stroke-width="10"/>
+  <rect x="470" y="138" width="10" height="52" fill="#F97316"/>
+  <rect x="470" y="270" width="10" height="76" fill="#F97316"/>
+  <circle cx="390" cy="348" r="20" fill="#1D4ED8"/>
+  <text x="78" y="92" fill="#131313" font-size="42" font-family="Arial" font-weight="700">REFRIGERATOR</text>
+</svg>

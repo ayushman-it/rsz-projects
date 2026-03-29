@@ -1,42 +1,59 @@
+import acService from "./assets/services/ac-service.svg";
+import airCooler from "./assets/services/air-cooler.svg";
+import refrigerator from "./assets/services/refrigerator.svg";
+import washingMachine from "./assets/services/washing-machine.svg";
+import microwave from "./assets/services/microwave.svg";
+import ledTv from "./assets/services/led-tv.svg";
+import roPurifier from "./assets/services/ro-purifier.svg";
+import geyser from "./assets/services/geyser.svg";
+
 const services = [
   {
     name: "AC Repair Service",
     type: "Cooling",
+    image: acService,
     desc: "Cooling issues, gas refill support, leakage checks, and complete AC servicing.",
   },
   {
     name: "Air Cooler Repair",
     type: "Seasonal",
+    image: airCooler,
     desc: "Motor faults, airflow problems, water pump issues, and summer maintenance.",
   },
   {
     name: "Refrigerator Repair",
     type: "Kitchen",
+    image: refrigerator,
     desc: "Compressor checks, freezer faults, temperature problems, and leakage diagnosis.",
   },
   {
     name: "Washing Machine",
     type: "Laundry",
+    image: washingMachine,
     desc: "Drainage, spin, vibration, inlet, and complete washing machine inspection.",
   },
   {
     name: "Microwave Repair",
     type: "Cooking",
+    image: microwave,
     desc: "Heating failure, keypad issues, door sensor faults, and internal diagnostics.",
   },
   {
     name: "LED TV Service",
     type: "Entertainment",
+    image: ledTv,
     desc: "Display, sound, panel, motherboard, and smart TV troubleshooting support.",
   },
   {
     name: "RO Water Purifier",
     type: "Water",
+    image: roPurifier,
     desc: "Filter replacement, low pressure, leakage, and purifier servicing support.",
   },
   {
     name: "Geyser Repair",
     type: "Heating",
+    image: geyser,
     desc: "Thermostat, heating element, switch, and safety inspection for water heaters.",
   },
 ];
@@ -113,7 +130,7 @@ function App() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-8 text-slate-700 sm:text-lg">
-                A stronger client-facing homepage for appliance repair bookings, built to show all major service categories with a cleaner commercial layout and sharper navigation style.
+                A stronger client-facing homepage for appliance repair bookings, now with visual service categories so customers can scan the platform faster.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -144,10 +161,10 @@ function App() {
               <div className="border border-white/15 bg-[#0f0f10]">
                 <div className="border-b border-white/10 px-5 py-5 lg:px-6">
                   <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-brand-mint">
-                    Quick Service Request
+                    Featured Categories
                   </p>
                   <h2 className="mt-3 font-display text-3xl font-bold uppercase leading-tight">
-                    Straightforward booking panel with repair-first hierarchy.
+                    Visual category panels for quicker service discovery.
                   </h2>
                 </div>
 
@@ -162,30 +179,23 @@ function App() {
                   ))}
                 </div>
 
-                <div className="p-5 lg:p-6">
-                  <div className="grid gap-4">
-                    {[
-                      "Select Appliance Type",
-                      "Enter Service Location",
-                      "Choose Preferred Time",
-                    ].map((field) => (
-                      <div key={field}>
-                        <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
-                          {field}
-                        </p>
-                        <div className="border border-white/15 bg-[#171717] px-4 py-4 text-sm font-medium uppercase tracking-[0.1em] text-slate-300">
-                          Placeholder for future booking input
-                        </div>
+                <div className="grid gap-px bg-white/10 p-px">
+                  {services.slice(0, 3).map((service) => (
+                    <div key={service.name} className="grid bg-[#0f0f10] md:grid-cols-[180px_1fr]">
+                      <div className="border-b border-white/10 md:border-b-0 md:border-r md:border-white/10">
+                        <img src={service.image} alt={service.name} className="h-40 w-full object-cover" />
                       </div>
-                    ))}
-                  </div>
-
-                  <a
-                    href="#services"
-                    className="mt-5 inline-flex border border-brand-ember bg-brand-ember px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-black transition hover:bg-white"
-                  >
-                    Check Available Services
-                  </a>
+                      <div className="px-5 py-5">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-mint">
+                          {service.type}
+                        </p>
+                        <p className="mt-3 font-display text-2xl font-bold uppercase text-white">
+                          {service.name}
+                        </p>
+                        <p className="mt-3 text-sm leading-7 text-slate-300">{service.desc}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -202,7 +212,7 @@ function App() {
                 Built like a practical repair business homepage, not a soft generic landing page.
               </h2>
               <p className="mt-5 max-w-xl text-base leading-8 text-slate-700">
-                This version is closer to the commercial service-template direction you shared: sharper header treatment, stronger section separation, appliance-heavy service blocks, and clearer customer action zones.
+                This version is closer to the commercial service-template direction you shared, now with category artwork to make each appliance lane easier to identify.
               </p>
             </div>
 
@@ -211,7 +221,7 @@ function App() {
                 "Straight navigation links",
                 "Rectangular CTA buttons",
                 "Service-business visual rhythm",
-                "Better category density",
+                "Category images for each service",
               ].map((item) => (
                 <div key={item} className="bg-[#f7f3ec] px-5 py-6">
                   <p className="text-sm font-bold uppercase tracking-[0.15em] text-slate-700">{item}</p>
@@ -229,29 +239,34 @@ function App() {
                   Repair Categories
                 </p>
                 <h2 className="mt-4 font-display text-4xl font-extrabold uppercase leading-tight sm:text-5xl">
-                  Popular home and electronics services in one service grid.
+                  Popular home and electronics services in one visual grid.
                 </h2>
               </div>
               <p className="max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
-                Service tiles are arranged in a denser, more business-like structure so the client immediately sees the actual repair scope of the platform.
+                Service tiles now include local category images so the client demo feels more complete and easier to scan.
               </p>
             </div>
 
             <div className="mt-8 grid gap-px bg-white/10 p-px md:grid-cols-2 xl:grid-cols-4">
               {services.map((service, index) => (
-                <article key={service.name} className="bg-[#141414] px-5 py-6 transition hover:bg-[#1d1d1d]">
-                  <div className="flex items-start justify-between gap-4">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-mint">
-                      {service.type}
-                    </p>
-                    <span className="font-display text-3xl font-bold uppercase text-white/20">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
+                <article key={service.name} className="bg-[#141414] transition hover:bg-[#1d1d1d]">
+                  <div className="border-b border-white/10 bg-[#1c1c1c]">
+                    <img src={service.image} alt={service.name} className="h-52 w-full object-cover" />
                   </div>
-                  <h3 className="mt-6 font-display text-2xl font-bold uppercase leading-tight text-white">
-                    {service.name}
-                  </h3>
-                  <p className="mt-4 text-sm leading-7 text-slate-300">{service.desc}</p>
+                  <div className="px-5 py-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-mint">
+                        {service.type}
+                      </p>
+                      <span className="font-display text-3xl font-bold uppercase text-white/20">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+                    <h3 className="mt-6 font-display text-2xl font-bold uppercase leading-tight text-white">
+                      {service.name}
+                    </h3>
+                    <p className="mt-4 text-sm leading-7 text-slate-300">{service.desc}</p>
+                  </div>
                 </article>
               ))}
             </div>
@@ -316,10 +331,10 @@ function App() {
                 Client Review Version
               </p>
               <h2 className="mt-4 font-display text-4xl font-extrabold uppercase leading-tight text-black sm:text-5xl">
-                Sharper navigation, straighter layout, and a more template-aligned service feel.
+                Template-aligned structure with visible service images for each category.
               </h2>
               <p className="mt-5 max-w-2xl text-base leading-8 text-black/80">
-                This version removes the rounded navigation style and shifts the homepage closer to the repair-services reference direction you shared.
+                The categories are now visual, which makes the homepage feel more complete and easier to present in agile client reviews.
               </p>
             </div>
 

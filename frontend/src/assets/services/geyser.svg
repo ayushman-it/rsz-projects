@@ -1,0 +1,10 @@
+<svg width="800" height="520" viewBox="0 0 800 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="520" fill="#E7ECF2"/>
+  <rect x="280" y="78" width="240" height="330" rx="24" fill="#131313"/>
+  <rect x="304" y="102" width="192" height="282" rx="20" fill="#F8F5EF"/>
+  <circle cx="400" cy="196" r="34" fill="#F97316"/>
+  <path d="M400 162C386 182 380 192 380 208C380 220 389 230 400 230C411 230 420 220 420 208C420 192 414 182 400 162Z" fill="#111111"/>
+  <rect x="372" y="270" width="56" height="16" fill="#1D4ED8"/>
+  <rect x="364" y="302" width="72" height="16" fill="#1D4ED8"/>
+  <text x="118" y="92" fill="#131313" font-size="42" font-family="Arial" font-weight="700">GEYSER REPAIR</text>
+</svg>

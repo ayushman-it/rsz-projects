@@ -1,0 +1,9 @@
+<svg width="800" height="520" viewBox="0 0 800 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="520" fill="#ECE6DB"/>
+  <rect x="238" y="110" width="324" height="220" fill="#121212"/>
+  <rect x="270" y="142" width="260" height="156" fill="#F8F5EF"/>
+  <path d="M400 174C430 208 462 240 462 274C462 309 434 334 400 334C366 334 338 309 338 274C338 240 370 208 400 174Z" fill="#1D4ED8"/>
+  <rect x="560" y="160" width="40" height="104" fill="#F97316"/>
+  <path d="M580 264V316C580 350 552 378 518 378H320" stroke="#121212" stroke-width="14" stroke-linecap="round"/>
+  <text x="92" y="88" fill="#121212" font-size="42" font-family="Arial" font-weight="700">RO PURIFIER</text>
+</svg>

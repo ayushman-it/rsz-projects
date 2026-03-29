@@ -1,0 +1,10 @@
+<svg width="800" height="520" viewBox="0 0 800 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="520" fill="#ECE6DB"/>
+  <rect x="86" y="118" width="628" height="170" fill="#121212"/>
+  <rect x="122" y="152" width="556" height="102" fill="#F8F5EF"/>
+  <path d="M188 318C214 340 226 365 228 394" stroke="#F97316" stroke-width="18" stroke-linecap="round"/>
+  <path d="M330 318C356 340 368 365 370 394" stroke="#F97316" stroke-width="18" stroke-linecap="round"/>
+  <path d="M472 318C498 340 510 365 512 394" stroke="#F97316" stroke-width="18" stroke-linecap="round"/>
+  <path d="M614 318C640 340 652 365 654 394" stroke="#F97316" stroke-width="18" stroke-linecap="round"/>
+  <text x="84" y="92" fill="#121212" font-size="42" font-family="Arial" font-weight="700">AC REPAIR</text>
+</svg>

@@ -1,0 +1,11 @@
+<svg width="800" height="520" viewBox="0 0 800 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="520" fill="#E7ECF2"/>
+  <rect x="120" y="124" width="560" height="270" fill="#131313"/>
+  <rect x="156" y="158" width="360" height="202" fill="#F8F5EF"/>
+  <rect x="548" y="158" width="92" height="202" fill="#ECE6DB"/>
+  <circle cx="594" cy="210" r="18" fill="#F97316"/>
+  <circle cx="594" cy="264" r="18" fill="#1D4ED8"/>
+  <rect x="576" y="314" width="36" height="18" fill="#131313"/>
+  <path d="M236 260C266 232 312 224 354 232C390 240 420 264 436 292" stroke="#F97316" stroke-width="18" stroke-linecap="round"/>
+  <text x="78" y="92" fill="#131313" font-size="42" font-family="Arial" font-weight="700">MICROWAVE</text>
+</svg>
