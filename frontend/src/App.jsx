@@ -1,354 +1,407 @@
-import acService from "./assets/services/ac-service.svg";
-import airCooler from "./assets/services/air-cooler.svg";
-import refrigerator from "./assets/services/refrigerator.svg";
-import washingMachine from "./assets/services/washing-machine.svg";
-import microwave from "./assets/services/microwave.svg";
-import ledTv from "./assets/services/led-tv.svg";
-import roPurifier from "./assets/services/ro-purifier.svg";
-import geyser from "./assets/services/geyser.svg";
+import { useEffect, useState } from "react";
 
-const services = [
+const mainNav = ["Home", "Services", "About", "Contact", "Blog"];
+
+const promoCards = [
   {
-    name: "AC Repair Service",
-    type: "Cooling",
-    image: acService,
-    desc: "Cooling issues, gas refill support, leakage checks, and complete AC servicing.",
+    eyebrow: "Trusted Home Care",
+    title: "Washing Machine Repair",
+    description: "Quick drum, motor, spin and drainage support for everyday laundry breakdowns.",
+    action: "Book Now",
+    image: "https://png.pngtree.com/png-clipart/20240523/original/pngtree-washing-machine-isolated-on-transparent-background-png-image_15158211.png",
   },
   {
-    name: "Air Cooler Repair",
-    type: "Seasonal",
-    image: airCooler,
-    desc: "Motor faults, airflow problems, water pump issues, and summer maintenance.",
+    eyebrow: "New Arrivals",
+    title: "AC Repair Service",
+    description: "Fast cooling checks, gas refill support and seasonal servicing visits.",
+    action: "Shop Now",
+    image: "https://urbanserviceplaza.co.in/wp-content/uploads/2022/06/ac-png-25246-min.png",
   },
   {
-    name: "Refrigerator Repair",
-    type: "Kitchen",
-    image: refrigerator,
-    desc: "Compressor checks, freezer faults, temperature problems, and leakage diagnosis.",
-  },
-  {
-    name: "Washing Machine",
-    type: "Laundry",
-    image: washingMachine,
-    desc: "Drainage, spin, vibration, inlet, and complete washing machine inspection.",
-  },
-  {
-    name: "Microwave Repair",
-    type: "Cooking",
-    image: microwave,
-    desc: "Heating failure, keypad issues, door sensor faults, and internal diagnostics.",
-  },
-  {
-    name: "LED TV Service",
-    type: "Entertainment",
-    image: ledTv,
-    desc: "Display, sound, panel, motherboard, and smart TV troubleshooting support.",
-  },
-  {
-    name: "RO Water Purifier",
-    type: "Water",
-    image: roPurifier,
-    desc: "Filter replacement, low pressure, leakage, and purifier servicing support.",
-  },
-  {
-    name: "Geyser Repair",
-    type: "Heating",
-    image: geyser,
-    desc: "Thermostat, heating element, switch, and safety inspection for water heaters.",
+    eyebrow: "New Arrivals",
+    title: "Air Cooler Repair",
+    description: "Summer-ready maintenance for motors, pumps, airflow and cooling pads.",
+    action: "Shop Now",
+    image: "https://www.revampservice.com/web-assets/assets/img/whyus-cooler.png",
   },
 ];
 
-const highlights = [
-  "Trusted doorstep appliance support",
-  "Fast booking-focused customer journey",
-  "Residential and commercial coverage",
-  "Scalable structure for future APIs",
+const bottomMenu = [
+  { label: "Home", href: "#top", icon: "home", tone: "rose" },
+  { label: "Call", href: "tel:+84943446000", icon: "phone", tone: "amber" },
+  { label: "Whatsapp", href: "https://wa.me/84943446000", icon: "whatsapp", tone: "green", featured: true },
+  { label: "Services", href: "#services", icon: "services", tone: "blue" },
+  { label: "Cart", href: "#cart", icon: "cart", tone: "violet" },
 ];
 
-const process = [
-  "Choose appliance category and issue type.",
-  "Pick your location and preferred time slot.",
-  "Confirm request and assign the right technician.",
-];
+function Icon({ name }) {
+  const common = {
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+  };
 
-const facts = [
-  { value: "12+", label: "Repair categories" },
-  { value: "24/7", label: "Lead collection flow" },
-  { value: "01", label: "Unified service platform" },
-];
+  const icons = {
+    search: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <circle cx="11" cy="11" r="6.5" {...common} />
+        <path d="M16 16l4.5 4.5" {...common} />
+      </svg>
+    ),
+    support: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M4 12a8 8 0 1116 0" {...common} />
+        <rect x="3" y="11" width="4" height="7" rx="2" {...common} />
+        <rect x="17" y="11" width="4" height="7" rx="2" {...common} />
+        <path d="M8 20h5a3 3 0 003-3" {...common} />
+      </svg>
+    ),
+    user: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <circle cx="12" cy="8" r="3.5" {...common} />
+        <path d="M5.5 19a6.5 6.5 0 0113 0" {...common} />
+      </svg>
+    ),
+    heart: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M12 20s-7-4.6-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.4-7 10-7 10z" {...common} />
+      </svg>
+    ),
+    cart: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <circle cx="9" cy="20" r="1.5" {...common} />
+        <circle cx="18" cy="20" r="1.5" {...common} />
+        <path d="M3 4h2l2.1 10.2a1 1 0 001 .8h9.9a1 1 0 001-.8L21 8H7" {...common} />
+      </svg>
+    ),
+    menu: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M4 7h16M4 12h16M4 17h16" {...common} />
+      </svg>
+    ),
+    grid: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <rect x="4" y="4" width="6" height="6" rx="1.2" {...common} />
+        <rect x="14" y="4" width="6" height="6" rx="1.2" {...common} />
+        <rect x="4" y="14" width="6" height="6" rx="1.2" {...common} />
+        <rect x="14" y="14" width="6" height="6" rx="1.2" {...common} />
+      </svg>
+    ),
+    chevron: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg icon-chevron">
+        <path d="M7 10l5 5 5-5" {...common} />
+      </svg>
+    ),
+    spark: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M12 3l1.7 4.3L18 9l-4.3 1.7L12 15l-1.7-4.3L6 9l4.3-1.7L12 3z" {...common} />
+      </svg>
+    ),
+    home: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M4 11.5L12 5l8 6.5" {...common} />
+        <path d="M6.5 10.5V19h11v-8.5" {...common} />
+      </svg>
+    ),
+    phone: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M6.8 4.5h2.6l1.2 3.4-1.5 1.6a15.4 15.4 0 005.4 5.4l1.6-1.5 3.4 1.2v2.6a1.7 1.7 0 01-1.9 1.7A16.8 16.8 0 015.1 6.4 1.7 1.7 0 016.8 4.5z" {...common} />
+      </svg>
+    ),
+    whatsapp: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M12 20a8 8 0 01-4.1-1.1L4 20l1.2-3.7A8 8 0 1112 20z" {...common} />
+        <path d="M9.3 9.2c.3-.7.6-.7.9-.7h.6c.2 0 .5 0 .7.5l.7 1.7c.1.2.1.5-.1.7l-.5.6c-.1.1-.2.3-.1.5.4.8 1.1 1.5 1.9 1.9.2.1.4 0 .5-.1l.6-.5c.2-.2.5-.2.7-.1l1.7.7c.5.2.5.5.5.7v.6c0 .3 0 .6-.7.9-.6.3-1.9.2-3.6-.7a9 9 0 01-3.7-3.7c-.9-1.7-1-3-.7-3.6z" {...common} />
+      </svg>
+    ),
+    services: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M7 7h10M7 12h10M7 17h6" {...common} />
+        <circle cx="5" cy="7" r="1" fill="currentColor" stroke="none" />
+        <circle cx="5" cy="12" r="1" fill="currentColor" stroke="none" />
+        <circle cx="5" cy="17" r="1" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  };
+
+  return icons[name] || null;
+}
+
+function IconButton({ label, icon, badge }) {
+  return (
+    <button type="button" className="icon-button" aria-label={label}>
+      <span className="icon-symbol" aria-hidden="true">
+        <Icon name={icon} />
+      </span>
+      {badge ? <span className="icon-badge">{badge}</span> : null}
+    </button>
+  );
+}
+
+function BrandLogo({ mobile = false }) {
+  return (
+    <a
+      href="#top"
+      className={mobile ? "brand-logo brand-logo-mobile" : "brand-logo"}
+      aria-label="Repair Service Zone home"
+    >
+      <span className="brand-badge">RSZ</span>
+      <span className="brand-copy">
+        <span className="brand-copy-top">Repair Service</span>
+        <strong className="brand-copy-bottom">Zone</strong>
+      </span>
+    </a>
+  );
+}
+
+function Loader() {
+  return (
+    <div className="page-loader" role="status" aria-live="polite" aria-label="Loading page">
+      <div className="loader-mark">RSZ</div>
+      <p className="loader-title">Repair Service Zone</p>
+      <div className="loader-bars" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  );
+}
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setLoading(false), 1200);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#f4f1eb] text-brand-ink">
-      <div className="bg-[#0f0f10] text-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <p>Repair Service Zone | Appliance Repair Solutions</p>
-          <div className="flex flex-wrap gap-x-6 gap-y-1 text-white/70">
-            <span>AC | Cooler | Fridge | TV | RO | Geyser</span>
-            <span>Doorstep Service Support</span>
+    <div className="header-demo-shell" id="top">
+      {loading ? <Loader /> : null}
+
+      <header className="site-header">
+        <div className="container-xl">
+          <div className="top-header row align-items-center g-3 d-none d-lg-flex">
+            <div className="col-lg-2">
+              <BrandLogo />
+            </div>
+
+            <div className="col-lg-5">
+              <form className="header-search" role="search">
+                <select aria-label="Select category" defaultValue="All Category">
+                  <option>All Category</option>
+                  <option>AC Services</option>
+                  <option>Cooling</option>
+                  <option>Appliances</option>
+                </select>
+                <input type="search" placeholder="Search" aria-label="Search" />
+                <button type="submit" className="search-trigger" aria-label="Submit search">
+                  <Icon name="search" />
+                </button>
+              </form>
+            </div>
+
+            <div className="col-lg-5">
+              <div className="header-utilities">
+                <div className="support-block">
+                  <div className="support-icon" aria-hidden="true">
+                    <Icon name="support" />
+                  </div>
+                  <div>
+                    <p className="support-email">support@repairservicezone.com</p>
+                    <p className="support-phone">(84) 943 446 000</p>
+                  </div>
+                </div>
+
+                <div className="utility-icons">
+                  <IconButton label="Login or signup" icon="user" />
+                  <IconButton label="Wishlist" icon="heart" />
+                  <IconButton label="Cart" icon="cart" badge="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mobile-header d-lg-none">
+            <div className="mobile-top-row">
+              <button
+                type="button"
+                className="mobile-menu-button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#mobileMenu"
+                aria-controls="mobileMenu"
+                aria-label="Open menu"
+              >
+                <Icon name="menu" />
+              </button>
+              <BrandLogo mobile />
+              <div className="mobile-actions">
+                <IconButton label="Wishlist" icon="heart" />
+                <IconButton label="Cart" icon="cart" badge="0" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="nav-bar d-none d-lg-block">
+          <div className="container-xl">
+            <div className="nav-row">
+              <div className="shop-category-link">
+                <span className="category-grid-icon" aria-hidden="true">
+                  <Icon name="grid" />
+                </span>
+                <span>Shop By Categories</span>
+                <span className="caret" aria-hidden="true">
+                  <Icon name="chevron" />
+                </span>
+              </div>
+
+              <nav className="primary-nav" aria-label="Primary">
+                {mainNav.map((item, index) => (
+                  <a
+                    key={item}
+                    href="#"
+                    className={index === 0 ? "nav-link-item nav-link-active" : "nav-link-item"}
+                  >
+                    {item}
+                    {(item === "Home" || item === "Blog") && (
+                      <span className="caret" aria-hidden="true">
+                        <Icon name="chevron" />
+                      </span>
+                    )}
+                  </a>
+                ))}
+                <a href="#" className="nav-link-item">
+                  Login / Signup
+                </a>
+                <a href="#cart" className="nav-link-item">
+                  Cart
+                </a>
+              </nav>
+
+              <div className="header-meta">
+                <div className="offer-link">
+                  <span className="offer-icon" aria-hidden="true">
+                    <Icon name="spark" />
+                  </span>
+                  <span>Special Offers</span>
+                </div>
+                <div className="meta-selectors">
+                  <button type="button" className="meta-button">
+                    English <span className="caret"><Icon name="chevron" /></span>
+                  </button>
+                  <button type="button" className="meta-button">
+                    $ USD <span className="caret"><Icon name="chevron" /></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="offcanvas offcanvas-start mobile-offcanvas" tabIndex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+        <div className="offcanvas-header">
+          <h2 className="offcanvas-title" id="mobileMenuLabel">
+            Repair Service Zone
+          </h2>
+          <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div className="offcanvas-body">
+          <div className="offcanvas-section">
+            <p className="offcanvas-label">Navigation</p>
+            <nav className="offcanvas-nav" aria-label="Mobile navigation">
+              {mainNav.map((item) => (
+                <a key={item} href="#" data-bs-dismiss="offcanvas">
+                  {item}
+                </a>
+              ))}
+              <a href="#" data-bs-dismiss="offcanvas">Login / Signup</a>
+              <a href="#cart" data-bs-dismiss="offcanvas">Cart</a>
+            </nav>
+          </div>
+
+          <div className="offcanvas-section">
+            <p className="offcanvas-label">Quick Access</p>
+            <div className="offcanvas-actions">
+              <button type="button" className="offcanvas-action-button">Special Offers</button>
+              <button type="button" className="offcanvas-action-button">English</button>
+              <button type="button" className="offcanvas-action-button">$ USD</button>
+            </div>
+          </div>
+
+          <div className="offcanvas-contact">
+            <p className="support-email">support@repairservicezone.com</p>
+            <p className="support-phone">(84) 943 446 000</p>
           </div>
         </div>
       </div>
 
-      <header className="border-b border-black bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <div>
-            <p className="font-display text-3xl font-extrabold uppercase tracking-[0.08em] text-black sm:text-4xl">
-              Repair Service Zone
-            </p>
-            <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 sm:text-sm">
-              Professional appliance repair booking interface
-            </p>
-          </div>
-
-          <nav className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold uppercase tracking-[0.14em] text-slate-800">
-            {[
-              ["Home", "#top"],
-              ["Services", "#services"],
-              ["About", "#about"],
-              ["Process", "#process"],
-              ["Contact", "#contact"],
-            ].map(([label, href]) => (
-              <a key={label} href={href} className="border-b-2 border-transparent pb-1 transition hover:border-brand-ember hover:text-brand-ember">
-                {label}
-              </a>
-            ))}
-          </nav>
-        </div>
-      </header>
-
-      <main id="top">
-        <section className="border-b border-black bg-[linear-gradient(90deg,#f4f1eb_0%,#f4f1eb_63%,#161616_63%,#161616_100%)]">
-          <div className="mx-auto grid max-w-7xl lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
-              <span className="inline-block bg-brand-ember px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-black">
-                Home Appliance Repair Experts
-              </span>
-
-              <h1 className="mt-6 max-w-4xl font-display text-5xl font-extrabold uppercase leading-[0.92] tracking-[0.02em] text-black sm:text-6xl xl:text-[5.2rem]">
-                Fast repair service for every major appliance category.
-              </h1>
-
-              <p className="mt-6 max-w-2xl text-base leading-8 text-slate-700 sm:text-lg">
-                A stronger client-facing homepage for appliance repair bookings, now with visual service categories so customers can scan the platform faster.
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href="#services"
-                  className="border border-black bg-black px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.16em] text-white transition hover:bg-brand-ember hover:text-black"
-                >
-                  Explore Services
-                </a>
-                <a
-                  href="#contact"
-                  className="border border-black bg-transparent px-6 py-4 text-center text-sm font-bold uppercase tracking-[0.16em] text-black transition hover:bg-white"
-                >
-                  Request Callback
-                </a>
-              </div>
-
-              <div className="mt-10 grid gap-px bg-black/10 sm:grid-cols-2 lg:max-w-3xl">
-                {highlights.map((item) => (
-                  <div key={item} className="bg-white px-4 py-5">
-                    <p className="text-sm font-bold uppercase tracking-[0.14em] text-slate-700">{item}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-[#161616] px-4 py-10 text-white sm:px-6 lg:px-8 lg:py-16">
-              <div className="border border-white/15 bg-[#0f0f10]">
-                <div className="border-b border-white/10 px-5 py-5 lg:px-6">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-brand-mint">
-                    Featured Categories
-                  </p>
-                  <h2 className="mt-3 font-display text-3xl font-bold uppercase leading-tight">
-                    Visual category panels for quicker service discovery.
-                  </h2>
+      <main className="container-xl pb-5 main-shell">
+        <section className="promo-section" id="services">
+          <div className="row g-3 align-items-stretch">
+            <div className="col-xl-8">
+              <article className="promo-card promo-card-feature h-100">
+                <div className="promo-copy">
+                  <p className="promo-eyebrow">{promoCards[0].eyebrow}</p>
+                  <h1>{promoCards[0].title}</h1>
+                  <p>{promoCards[0].description}</p>
+                  <button type="button" className="promo-button">
+                    {promoCards[0].action}
+                  </button>
                 </div>
-
-                <div className="grid gap-px bg-white/10 p-px sm:grid-cols-3">
-                  {facts.map((fact) => (
-                    <div key={fact.label} className="bg-[#0f0f10] px-4 py-5">
-                      <p className="font-display text-4xl font-bold uppercase text-white">{fact.value}</p>
-                      <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-                        {fact.label}
-                      </p>
-                    </div>
-                  ))}
+                <div className="promo-media promo-media-feature">
+                  <img src={promoCards[0].image} alt={promoCards[0].title} />
                 </div>
+              </article>
+            </div>
 
-                <div className="grid gap-px bg-white/10 p-px">
-                  {services.slice(0, 3).map((service) => (
-                    <div key={service.name} className="grid bg-[#0f0f10] md:grid-cols-[180px_1fr]">
-                      <div className="border-b border-white/10 md:border-b-0 md:border-r md:border-white/10">
-                        <img src={service.image} alt={service.name} className="h-40 w-full object-cover" />
-                      </div>
-                      <div className="px-5 py-5">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-mint">
-                          {service.type}
-                        </p>
-                        <p className="mt-3 font-display text-2xl font-bold uppercase text-white">
-                          {service.name}
-                        </p>
-                        <p className="mt-3 text-sm leading-7 text-slate-300">{service.desc}</p>
-                      </div>
+            <div className="col-xl-4">
+              <div className="promo-stack">
+                {promoCards.slice(1).map((card) => (
+                  <article key={card.title} className="promo-card promo-card-side">
+                    <div className="promo-copy promo-copy-side">
+                      <p className="promo-eyebrow">{card.eyebrow}</p>
+                      <h2>{card.title}</h2>
+                      <p>{card.description}</p>
+                      <button type="button" className="promo-button promo-button-light">
+                        {card.action}
+                      </button>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="about" className="border-b border-black bg-white">
-          <div className="mx-auto grid max-w-7xl lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="border-b border-black bg-[#ece6db] px-4 py-10 sm:px-6 lg:border-b-0 lg:border-r lg:px-8 lg:py-14">
-              <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-brand-ember">
-                About The Interface
-              </p>
-              <h2 className="mt-4 font-display text-4xl font-extrabold uppercase leading-tight text-black sm:text-5xl">
-                Built like a practical repair business homepage, not a soft generic landing page.
-              </h2>
-              <p className="mt-5 max-w-xl text-base leading-8 text-slate-700">
-                This version is closer to the commercial service-template direction you shared, now with category artwork to make each appliance lane easier to identify.
-              </p>
-            </div>
-
-            <div className="grid gap-px bg-black/10 p-px sm:grid-cols-2">
-              {[
-                "Straight navigation links",
-                "Rectangular CTA buttons",
-                "Service-business visual rhythm",
-                "Category images for each service",
-              ].map((item) => (
-                <div key={item} className="bg-[#f7f3ec] px-5 py-6">
-                  <p className="text-sm font-bold uppercase tracking-[0.15em] text-slate-700">{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="services" className="border-b border-black bg-[#141414] text-white">
-          <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-            <div className="grid gap-4 lg:grid-cols-[1fr_0.8fr] lg:items-end">
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-brand-mint">
-                  Repair Categories
-                </p>
-                <h2 className="mt-4 font-display text-4xl font-extrabold uppercase leading-tight sm:text-5xl">
-                  Popular home and electronics services in one visual grid.
-                </h2>
-              </div>
-              <p className="max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
-                Service tiles now include local category images so the client demo feels more complete and easier to scan.
-              </p>
-            </div>
-
-            <div className="mt-8 grid gap-px bg-white/10 p-px md:grid-cols-2 xl:grid-cols-4">
-              {services.map((service, index) => (
-                <article key={service.name} className="bg-[#141414] transition hover:bg-[#1d1d1d]">
-                  <div className="border-b border-white/10 bg-[#1c1c1c]">
-                    <img src={service.image} alt={service.name} className="h-52 w-full object-cover" />
-                  </div>
-                  <div className="px-5 py-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-mint">
-                        {service.type}
-                      </p>
-                      <span className="font-display text-3xl font-bold uppercase text-white/20">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
+                    <div className="promo-media promo-media-side">
+                      <img src={card.image} alt={card.title} />
                     </div>
-                    <h3 className="mt-6 font-display text-2xl font-bold uppercase leading-tight text-white">
-                      {service.name}
-                    </h3>
-                    <p className="mt-4 text-sm leading-7 text-slate-300">{service.desc}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="process" className="border-b border-black bg-[#f7f3ec]">
-          <div className="mx-auto grid max-w-7xl lg:grid-cols-[1fr_1fr]">
-            <div className="border-b border-black px-4 py-10 sm:px-6 lg:border-b-0 lg:border-r lg:px-8 lg:py-14">
-              <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-brand-ember">
-                Work Process
-              </p>
-              <h2 className="mt-4 font-display text-4xl font-extrabold uppercase leading-tight text-black sm:text-5xl">
-                Clean booking path from issue selection to service dispatch.
-              </h2>
-
-              <div className="mt-8 grid gap-px bg-black/10 p-px">
-                {process.map((step, index) => (
-                  <div key={step} className="grid bg-white sm:grid-cols-[88px_1fr]">
-                    <div className="border-b border-black px-5 py-4 text-center font-display text-3xl font-bold uppercase text-black sm:border-b-0 sm:border-r">
-                      {index + 1}
-                    </div>
-                    <div className="px-5 py-5">
-                      <p className="text-sm font-bold uppercase tracking-[0.14em] text-slate-700">{step}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-[#ece6db] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-              <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-brand-sky">
-                Service Coverage
-              </p>
-              <h2 className="mt-4 font-display text-4xl font-extrabold uppercase leading-tight text-black sm:text-5xl">
-                Ready for homes, offices, shops, and local service operations.
-              </h2>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-slate-700">
-                The layout is prepared for future city targeting, pricing, technician assignment, testimonials, and booking form integration without changing the visual foundation again.
-              </p>
-
-              <div className="mt-8 grid gap-px bg-black/10 p-px sm:grid-cols-2">
-                {[
-                  "Homes & Apartments",
-                  "Retail & Showrooms",
-                  "Small Offices",
-                  "Commercial Kitchen Support",
-                ].map((item) => (
-                  <div key={item} className="bg-white px-5 py-5">
-                    <p className="text-sm font-bold uppercase tracking-[0.14em] text-black">{item}</p>
-                  </div>
+                  </article>
                 ))}
               </div>
             </div>
           </div>
         </section>
 
-        <section id="contact" className="bg-brand-ember">
-          <div className="mx-auto grid max-w-7xl border-x border-black lg:grid-cols-[1fr_auto] lg:items-center">
-            <div className="border-b border-black px-4 py-10 sm:px-6 lg:border-b-0 lg:px-8 lg:py-12">
-              <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-black/70">
-                Client Review Version
-              </p>
-              <h2 className="mt-4 font-display text-4xl font-extrabold uppercase leading-tight text-black sm:text-5xl">
-                Template-aligned structure with visible service images for each category.
-              </h2>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-black/80">
-                The categories are now visual, which makes the homepage feel more complete and easier to present in agile client reviews.
-              </p>
-            </div>
-
-            <div className="px-4 py-10 sm:px-6 lg:border-l lg:border-black lg:px-8 lg:py-12">
-              <a
-                href="#services"
-                className="inline-flex border border-black bg-black px-6 py-4 text-sm font-bold uppercase tracking-[0.16em] text-white transition hover:bg-white hover:text-black"
-              >
-                Review Live Services
-              </a>
-            </div>
-          </div>
-        </section>
+        <section className="cart-anchor" id="cart" aria-hidden="true"></section>
       </main>
+
+      <div className="bottom-app-shell d-lg-none">
+        <nav className="bottom-app-nav" aria-label="Quick actions">
+          {bottomMenu.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className={item.featured ? `bottom-nav-item bottom-nav-feature tone-${item.tone}` : `bottom-nav-item tone-${item.tone}`}
+              target={item.label === "Whatsapp" ? "_blank" : undefined}
+              rel={item.label === "Whatsapp" ? "noreferrer" : undefined}
+            >
+              <span className="bottom-nav-icon" aria-hidden="true">
+                <Icon name={item.icon} />
+              </span>
+              <span>{item.label}</span>
+            </a>
+          ))}
+        </nav>
+      </div>
     </div>
   );
 }
