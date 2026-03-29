@@ -5,24 +5,20 @@ export default {
     extend: {
       colors: {
         brand: {
-          ink: "#0f172a",
-          sky: "#3b82f6",
-          mint: "#99f6e4",
-          cream: "#fff7ed",
-          ember: "#fb923c",
-          steel: "#dbe4f0",
+          ink: "#101010",
+          sky: "#1d4ed8",
+          mint: "#c4ff4d",
+          cream: "#f3efe7",
+          ember: "#f97316",
+          steel: "#c9d4df",
         },
       },
       fontFamily: {
-        display: ["Space Grotesk", "sans-serif"],
-        body: ["Manrope", "sans-serif"],
+        display: ["Archivo", "sans-serif"],
+        body: ["IBM Plex Sans", "sans-serif"],
       },
       boxShadow: {
-        float: "0 20px 70px rgba(15, 23, 42, 0.16)",
-      },
-      backgroundImage: {
-        mesh:
-          "radial-gradient(circle at top left, rgba(59,130,246,0.22), transparent 35%), radial-gradient(circle at bottom right, rgba(251,146,60,0.18), transparent 30%), linear-gradient(135deg, #fff7ed 0%, #f8fafc 45%, #eff6ff 100%)",
+        float: "10px 10px 0 rgba(0, 0, 0, 0.12)",
       },
     },
   },
