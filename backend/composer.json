@@ -1,0 +1,11 @@
+{
+  "name": "repair-service-zone/backend",
+  "description": "Repair Service Zone backend skeleton in PHP",
+  "type": "project",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  }
+}
