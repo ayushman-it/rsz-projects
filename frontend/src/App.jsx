@@ -13,7 +13,7 @@ const promoCards = [
     description: "Quick drum, motor, spin and drainage support for everyday laundry breakdowns.",
     action: "Book Now",
     targetCategory: "wash-area-electronics-item-repairs",
-    image: "https://png.pngtree.com/png-clipart/20240523/original/pngtree-washing-machine-isolated-on-transparent-background-png-image_15158211.png",
+    image: "https://img.pikbest.com/png-images/20241020/washing-machine-with-colorful-laundry-isolated_10980362.png!sw800",
   },
   {
     eyebrow: "New Arrivals",
@@ -40,6 +40,57 @@ const categoryImages = {
   cooler: "https://www.pngarts.com/files/8/Cooler-Transparent-Images.png",
   electronics: "https://5.imimg.com/data5/IP/IW/HP/SELLER-57975347/electronics-repair-and-maintanence-500x500.png",
   wash: "https://powerguardonline.com/cdn/shop/files/ABS_3x_551a4225-79e0-41e5-8b69-a8620e2a6719.png?v=1732364318",
+};
+
+const categoryBrands = {
+  "kitchen-equipment-repair": [
+    { name: "LG", mark: "LG", tone: "crimson", focus: "Refrigerators" },
+    { name: "Samsung", mark: "SAMSUNG", tone: "blue", focus: "Kitchen Cooling" },
+    { name: "Whirlpool", mark: "Whirlpool", tone: "indigo", focus: "Fridges" },
+    { name: "Kent", mark: "KENT", tone: "navy", focus: "RO Systems" },
+    { name: "Aquaguard", mark: "Aquaguard", tone: "teal", focus: "Purifiers" },
+    { name: "Panasonic", mark: "Panasonic", tone: "slate", focus: "Microwave" },
+  ],
+  "living-room": [
+    { name: "Sony", mark: "SONY", tone: "midnight", focus: "TV & Audio" },
+    { name: "Samsung", mark: "SAMSUNG", tone: "blue", focus: "Smart TVs" },
+    { name: "LG", mark: "LG", tone: "crimson", focus: "Displays" },
+    { name: "Philips", mark: "PHILIPS", tone: "navy", focus: "Home Audio" },
+    { name: "Panasonic", mark: "Panasonic", tone: "slate", focus: "Entertainment" },
+    { name: "Croma", mark: "Croma", tone: "charcoal", focus: "Accessories" },
+  ],
+  "ac-repair": [
+    { name: "Voltas", mark: "Voltas", tone: "blue", focus: "Split AC" },
+    { name: "Daikin", mark: "Daikin", tone: "teal", focus: "Inverter AC" },
+    { name: "LG", mark: "LG", tone: "crimson", focus: "Cooling Systems" },
+    { name: "Lloyd", mark: "LLOYD", tone: "red", focus: "Window AC" },
+    { name: "Carrier", mark: "Carrier", tone: "navy", focus: "Residential AC" },
+    { name: "Samsung", mark: "SAMSUNG", tone: "indigo", focus: "WindFree AC" },
+  ],
+  "cooler-repair": [
+    { name: "Symphony", mark: "SYMPHONY", tone: "red", focus: "Desert Cooler" },
+    { name: "Havells", mark: "Havells", tone: "blue", focus: "Air Cooler" },
+    { name: "Crompton", mark: "Crompton", tone: "teal", focus: "Cooling Fans" },
+    { name: "Bajaj", mark: "BAJAJ", tone: "navy", focus: "Room Cooler" },
+    { name: "Livpure", mark: "Livpure", tone: "green", focus: "Desert Cooling" },
+    { name: "Orient", mark: "ORIENT", tone: "charcoal", focus: "Coolers" },
+  ],
+  "electronics-item-repair": [
+    { name: "Philips", mark: "PHILIPS", tone: "navy", focus: "Mixer Grinder" },
+    { name: "Croma", mark: "Croma", tone: "charcoal", focus: "Home Appliances" },
+    { name: "Morphy Richards", mark: "Morphy", tone: "crimson", focus: "Steam Iron" },
+    { name: "Crompton", mark: "Crompton", tone: "teal", focus: "Small Appliances" },
+    { name: "Havells", mark: "Havells", tone: "blue", focus: "Electronics" },
+    { name: "Panasonic", mark: "Panasonic", tone: "slate", focus: "Home Utility" },
+  ],
+  "wash-area-electronics-item-repairs": [
+    { name: "LG", mark: "LG", tone: "crimson", focus: "Front Load WM" },
+    { name: "IFB", mark: "IFB", tone: "red", focus: "Washer Dryer" },
+    { name: "Samsung", mark: "SAMSUNG", tone: "blue", focus: "Washing Machine" },
+    { name: "Whirlpool", mark: "Whirlpool", tone: "indigo", focus: "Laundry Care" },
+    { name: "Bosch", mark: "BOSCH", tone: "charcoal", focus: "Wash Systems" },
+    { name: "Croma", mark: "Croma", tone: "slate", focus: "Geysers" },
+  ],
 };
 
 const createProduct = (id, category, name, price, compareAt, image) => ({
@@ -638,6 +689,28 @@ function App() {
                 </div>
               </div>
             </div>
+
+            <div className="brand-showcase-block">
+              <div className="brand-showcase-header">
+                <div>
+                  <p className="service-tab-kicker">Shop By Brands</p>
+                  <h2>Popular {activeCategoryData.label} repair brands we handle.</h2>
+                </div>
+                <button type="button" className="brand-showcase-link" onClick={() => handleOpenServices(activeCategoryData.slug)}>See All Brands</button>
+              </div>
+
+              <div className="brand-showcase-grid" aria-label={`${activeCategoryData.label} brands`}>
+                {activeBrands.map((brand) => (
+                  <article key={`${activeCategoryData.slug}-${brand.name}`} className={`brand-card brand-tone-${brand.tone}`}>
+                    <div className="brand-card-mark">{brand.mark}</div>
+                    <div className="brand-card-copy">
+                      <h3>{brand.name}</h3>
+                      <p>{brand.focus}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
           </section>
         ) : (
           <section className="cart-page-shell" id="cart-page">
@@ -787,6 +860,10 @@ function App() {
 }
 
 export default App;
+
+
+
+
 
 
 
