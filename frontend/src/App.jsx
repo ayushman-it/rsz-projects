@@ -26,6 +26,58 @@ const promoCards = [
   },
 ];
 
+const serviceCategories = [
+  {
+    slug: "kitchen-equipment-repair",
+    label: "Kitchen",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpyDenaDupRazJuactoTLyaGX35o4JCGvRpw&s",
+  },
+  {
+    slug: "living-room",
+    label: "Living Room",
+    image: "https://cdn.shopify.com/s/files/1/0441/7349/2379/files/2_360x_0dd8a06a-ca87-42df-87eb-4b7bb568649d.webp?v=1737009251",
+  },
+  {
+    slug: "ac-repair",
+    label: "AC Repair",
+    image: "https://png.pngtree.com/png-vector/20231016/ourmid/pngtree-air-conditioner-png-png-image_10198901.png",
+  },
+  {
+    slug: "cooler-repair",
+    label: "Cooler Repair",
+    image: "https://www.pngarts.com/files/8/Cooler-Transparent-Images.png",
+  },
+  {
+    slug: "electronics-item-repair",
+    label: "Electronics",
+    image: "https://5.imimg.com/data5/IP/IW/HP/SELLER-57975347/electronics-repair-and-maintanence-500x500.png",
+  },
+  {
+    slug: "wash-area-electronics-item-repairs",
+    label: "Wash Area",
+    image: "https://powerguardonline.com/cdn/shop/files/ABS_3x_551a4225-79e0-41e5-8b69-a8620e2a6719.png?v=1732364318",
+  },
+];
+
+const defaultCategorySlug = serviceCategories[0].slug;
+
+function getCategoryFromHash(hash) {
+  const normalizedHash = hash.replace(/^#\/?/, "");
+
+  if (!normalizedHash || normalizedHash === "services") {
+    return defaultCategorySlug;
+  }
+
+  if (normalizedHash.startsWith("services/")) {
+    const slug = normalizedHash.slice("services/".length);
+    const matchedCategory = serviceCategories.find((category) => category.slug === slug);
+
+    return matchedCategory ? matchedCategory.slug : defaultCategorySlug;
+  }
+
+  return defaultCategorySlug;
+}
+
 const bottomMenu = [
   { label: "Home", href: "#top", icon: "home", tone: "rose" },
   { label: "Call", href: "tel:+84943446000", icon: "phone", tone: "amber" },
@@ -172,11 +224,29 @@ function Loader() {
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState(defaultCategorySlug);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setLoading(false), 1200);
     return () => window.clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const syncCategoryFromHash = () => {
+      setActiveCategory(getCategoryFromHash(window.location.hash));
+    };
+
+    syncCategoryFromHash();
+    window.addEventListener("hashchange", syncCategoryFromHash);
+
+    return () => window.removeEventListener("hashchange", syncCategoryFromHash);
+  }, []);
+
+  const handleCategoryChange = (slug) => {
+    setActiveCategory(slug);
+    window.history.replaceState(null, "", `#services/${slug}`);
+    document.getElementById("services")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="header-demo-shell" id="top">
@@ -249,16 +319,6 @@ function App() {
         <div className="nav-bar d-none d-lg-block">
           <div className="container-xl">
             <div className="nav-row">
-              <div className="shop-category-link">
-                <span className="category-grid-icon" aria-hidden="true">
-                  <Icon name="grid" />
-                </span>
-                <span>Shop By Categories</span>
-                <span className="caret" aria-hidden="true">
-                  <Icon name="chevron" />
-                </span>
-              </div>
-
               <nav className="primary-nav" aria-label="Primary">
                 {mainNav.map((item, index) => (
                   <a
@@ -283,12 +343,6 @@ function App() {
               </nav>
 
               <div className="header-meta">
-                <div className="offer-link">
-                  <span className="offer-icon" aria-hidden="true">
-                    <Icon name="spark" />
-                  </span>
-                  <span>Special Offers</span>
-                </div>
                 <div className="meta-selectors">
                   <button type="button" className="meta-button">
                     English <span className="caret"><Icon name="chevron" /></span>
@@ -327,7 +381,6 @@ function App() {
           <div className="offcanvas-section">
             <p className="offcanvas-label">Quick Access</p>
             <div className="offcanvas-actions">
-              <button type="button" className="offcanvas-action-button">Special Offers</button>
               <button type="button" className="offcanvas-action-button">English</button>
               <button type="button" className="offcanvas-action-button">$ USD</button>
             </div>
@@ -379,8 +432,36 @@ function App() {
               </div>
             </div>
           </div>
-        </section>
 
+          <div className="service-tab-block">
+            <div className="service-tab-header">
+              <p className="service-tab-kicker">Browse Categories</p>
+              <h2>Find the right repair category for every room and appliance.</h2>
+            </div>
+
+            <div className="service-tab-scroll" role="tablist" aria-label="Service categories">
+              {serviceCategories.map((category) => {
+                const isActive = category.slug === activeCategory;
+
+                return (
+                  <button
+                    key={category.slug}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className={isActive ? "service-tab-trigger service-tab-trigger-active" : "service-tab-trigger"}
+                    onClick={() => handleCategoryChange(category.slug)}
+                  >
+                    <span className="service-tab-thumb" aria-hidden="true">
+                      <img src={category.image} alt="" />
+                    </span>
+                    <span className="service-tab-title">{category.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </section>
         <section className="cart-anchor" id="cart" aria-hidden="true"></section>
       </main>
 
@@ -407,3 +488,4 @@ function App() {
 }
 
 export default App;
+
