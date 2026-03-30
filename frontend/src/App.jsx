@@ -96,15 +96,15 @@ const categoryBrands = {
 const footerGroups = [
   {
     title: "Information",
-    links: ["Specials", "SiteMap", "Delivery Return", "Privacy Policy", "Terms & Conditions"],
+    links: ["SiteMap", "Privacy Policy", "Terms & Conditions"],
   },
   {
     title: "Customer Services",
-    links: ["Brands", "Affiliates", "Returns", "Service Cart", "Gift Certificates"],
+    links: ["Brands", "Affiliates", "Returns", "Service Cart"],
   },
   {
     title: "Contact Us",
-    links: ["About Us", "Contact Us", "FAQs", "Wishlist", "Service Cart"],
+    links: ["About Us", "Contact Us", "FAQs", "Service Cart"],
   },
 ];
 
@@ -1031,6 +1031,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
