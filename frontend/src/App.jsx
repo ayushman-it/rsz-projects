@@ -93,6 +93,36 @@ const categoryBrands = {
   ],
 };
 
+const footerGroups = [
+  {
+    title: "Information",
+    links: ["Specials", "SiteMap", "Delivery Return", "Privacy Policy", "Terms & Conditions"],
+  },
+  {
+    title: "Customer Services",
+    links: ["Brands", "Affiliates", "Returns", "Service Cart", "Gift Certificates"],
+  },
+  {
+    title: "Contact Us",
+    links: ["About Us", "Contact Us", "FAQs", "Wishlist", "Service Cart"],
+  },
+];
+
+const footerSocials = [
+  { label: "Facebook", icon: "facebook" },
+  { label: "Instagram", icon: "instagram" },
+  { label: "X", icon: "xsocial" },
+  { label: "TikTok", icon: "tiktok" },
+  { label: "YouTube", icon: "youtube" },
+];
+
+const footerPayments = [
+  { label: "Visa", type: "visa", mark: "V" },
+  { label: "PayPal", type: "paypal", mark: "P" },
+  { label: "Mastercard", type: "mastercard", mark: "MC" },
+  { label: "RuPay", type: "rupay", mark: "R" },
+  { label: "UPI", type: "upi", mark: "U" },
+];
 const createProduct = (id, category, name, price, compareAt, image) => ({
   id,
   category,
@@ -309,6 +339,39 @@ function Icon({ name }) {
     close: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
         <path d="M6 6l12 12M18 6L6 18" {...common} />
+      </svg>
+    ),
+    facebook: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M14 8h2V4h-2.3C11.7 4 10 5.7 10 7.7V10H8v3h2v7h3v-7h2.3l.7-3H13V8.1c0-.6.4-1.1 1-1.1z" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+    instagram: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <rect x="4" y="4" width="16" height="16" rx="4" {...common} />
+        <circle cx="12" cy="12" r="3.5" {...common} />
+        <circle cx="17" cy="7" r="1" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+    xsocial: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M6 5l12 14M18 5L6 19" {...common} />
+      </svg>
+    ),
+    tiktok: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M14 5c.7 1.6 1.9 2.8 3.5 3.4V11c-1.2-.1-2.4-.5-3.5-1.2v5.5a4.3 4.3 0 11-4.3-4.3" {...common} />
+      </svg>
+    ),
+    youtube: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <rect x="3.5" y="6.5" width="17" height="11" rx="3" {...common} />
+        <path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+    "arrow-up-right": (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M7 17L17 7M9 7h8v8" {...common} />
       </svg>
     ),
   };
@@ -628,12 +691,40 @@ function App() {
 
             <div className="service-tab-block" id="services-catalog">
               <div className="service-tab-header">
-                <div>
+                <div className="service-tab-copy">
                   <p className="service-tab-kicker">Browse Categories</p>
-                  <h2>Choose a category and surface dummy repair-ready products.</h2>
+                  <h2>Choose a repair category and explore a cleaner service-ready catalog.</h2>
                   <p className="service-tab-description">This is a frontend-only catalog for now. We can replace the images you send later and connect real backend inventory after the UI is finalized.</p>
+                  <div className="service-tab-highlights" aria-label="Catalog highlights">
+                    <span className="service-tab-highlight"><span className="service-tab-highlight-icon"><Icon name="services" /></span>{serviceCategories.length} categories</span>
+                    <span className="service-tab-highlight"><span className="service-tab-highlight-icon"><Icon name="support" /></span>Doorstep support flow</span>
+                    <span className="service-tab-highlight"><span className="service-tab-highlight-icon"><Icon name="camera" /></span>Image upload ready</span>
+                  </div>
                 </div>
-                <button type="button" className="catalog-open-cart" onClick={handleOpenCart}>Open Cart ({cartCount})</button>
+                <div className="service-tab-panel">
+                  <p className="service-tab-panel-label">Active category</p>
+                  <h3>{activeCategoryData.label}</h3>
+                  <p className="service-tab-panel-copy">Structured frontend demo section for repair booking requests before backend integration.</p>
+                  <div className="service-tab-panel-stats">
+                    <div className="service-tab-stat">
+                      <span>Services</span>
+                      <strong>{activeCategoryData.products.length}</strong>
+                    </div>
+                    <div className="service-tab-stat">
+                      <span>Brands</span>
+                      <strong>{activeBrands.length}</strong>
+                    </div>
+                    <div className="service-tab-stat">
+                      <span>Cart</span>
+                      <strong>{cartCount}</strong>
+                    </div>
+                  </div>
+                  <button type="button" className="catalog-open-cart" onClick={handleOpenCart}>
+                    <span className="catalog-open-cart-icon"><Icon name="cart" /></span>
+                    <span>Open Cart</span>
+                    <span className="catalog-open-cart-count">{cartCount}</span>
+                  </button>
+                </div>
               </div>
 
               <div className="service-tab-scroll" role="tablist" aria-label="Service categories">
@@ -642,7 +733,10 @@ function App() {
                   return (
                     <button key={category.slug} type="button" role="tab" aria-selected={isActive} className={isActive ? "service-tab-trigger service-tab-trigger-active" : "service-tab-trigger"} onClick={() => handleCategoryChange(category.slug)}>
                       <span className="service-tab-thumb" aria-hidden="true"><img src={category.image} alt="" /></span>
-                      <span className="service-tab-title">{category.label}</span>
+                      <span className="service-tab-copy-stack">
+                        <span className="service-tab-title">{category.label}</span>
+                        <span className="service-tab-meta">{category.products.length} services</span>
+                      </span>
                     </button>
                   );
                 })}
@@ -650,12 +744,26 @@ function App() {
 
               <div className="catalog-shell">
                 <div className="catalog-toolbar">
-                  <div>
+                  <div className="catalog-toolbar-copy">
                     <p className="catalog-category-label">{activeCategoryData.label}</p>
-                    <h3>{activeCategoryData.label} dummy products</h3>
+                    <h3>{activeCategoryData.label} service catalog</h3>
                     <p className="catalog-copy">{activeCategoryData.intro}</p>
+                    <div className="catalog-toolbar-meta">
+                      <span className="catalog-meta-pill"><span className="catalog-meta-icon"><Icon name="support" /></span>Doorstep service</span>
+                      <span className="catalog-meta-pill"><span className="catalog-meta-icon"><Icon name="camera" /></span>Issue images supported</span>
+                      <span className="catalog-meta-pill"><span className="catalog-meta-icon"><Icon name="services" /></span>Dummy frontend data</span>
+                    </div>
                   </div>
-                  <button type="button" className="catalog-route-pill" onClick={() => handleOpenServices(activeCategoryData.slug)}>/services/{activeCategoryData.slug}</button>
+                  <div className="catalog-toolbar-actions">
+                    <div className="catalog-summary-card">
+                      <span>Ready services</span>
+                      <strong>{activeCategoryData.products.length}</strong>
+                    </div>
+                    <button type="button" className="catalog-route-pill" onClick={() => handleOpenServices(activeCategoryData.slug)}>
+                      <span className="catalog-route-pill-icon"><Icon name="services" /></span>
+                      /services/{activeCategoryData.slug}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="catalog-grid">
@@ -794,6 +902,68 @@ function App() {
         )}
       </main>
 
+      <footer className="site-footer">
+        <div className="container-xl">
+          <div className="footer-grid">
+            <div className="footer-brand-column">
+              <div className="footer-wordmark">
+                <span className="footer-wordmark-main">REPAIR</span>
+                <span className="footer-wordmark-accent">ZONE</span>
+              </div>
+              <p className="footer-address">Shop number 225 MP Nagar zone 1 Near Vishal Mega Mart, Zone 8 Bhopal, Madhya Pradesh</p>
+              <p className="footer-hours">Working hours: Monday-Sunday: Open 24 hours</p>
+              <a href={`tel:${PHONE_NUMBER_TEL}`} className="footer-phone">{PHONE_NUMBER_DISPLAY}</a>
+            </div>
+            {footerGroups.map((group) => (
+              <div key={group.title} className="footer-link-column">
+                <h3>{group.title}</h3>
+                <div className="footer-link-list">
+                  {group.links.map((link) => (
+                    <a key={link} href="#">{link}</a>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <div className="footer-newsletter-column">
+              <h3>Join Our Newsletter And Get 50% Discount For Your First Service Request</h3>
+              <form className="footer-newsletter-form" onSubmit={(event) => event.preventDefault()}>
+                <input type="email" placeholder="Your email address..." aria-label="Your email address" />
+                <button type="submit" aria-label="Join newsletter"><Icon name="arrow-up-right" /></button>
+              </form>
+              <div className="footer-socials" aria-label="Social media links">
+                {footerSocials.map((social) => (
+                  <a key={social.label} href="#" className="footer-social-link" aria-label={social.label}>
+                    <Icon name={social.icon} />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="footer-bottom-bar">
+            <p>Repair Service Zone © 2026. All Rights Reserved.</p>
+            <div className="footer-payment-row" aria-label="Payment methods">
+              {footerPayments.map((payment) => (
+                <span key={payment.type} className={`footer-payment-badge footer-payment-badge-${payment.type}`}>
+                  {payment.type === "mastercard" ? (
+                    <span className="footer-payment-icon footer-payment-icon-mastercard" aria-hidden="true">
+                      <span className="footer-payment-circle footer-payment-circle-left"></span>
+                      <span className="footer-payment-circle footer-payment-circle-right"></span>
+                    </span>
+                  ) : (
+                    <span className={`footer-payment-icon footer-payment-icon-${payment.type}`} aria-hidden="true">
+                      {payment.mark}
+                    </span>
+                  )}
+                  <span>{payment.label}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </footer>
+
       {bookingModalOpen && selectedService ? (
         <div className="service-modal-backdrop" role="presentation" onClick={handleCloseBookingModal}>
           <div className="service-modal-card" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle" onClick={(event) => event.stopPropagation()}>
@@ -861,6 +1031,14 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
+
+
+
 
 
 
