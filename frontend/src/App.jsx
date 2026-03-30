@@ -386,6 +386,7 @@ function App() {
   }, []);
 
   const activeCategoryData = serviceCategories.find((category) => category.slug === activeCategory) || serviceCategories[0];
+  const activeBrands = categoryBrands[activeCategory] || [];
   const cartCount = cartItems.length;
   const attachedImageCount = cartItems.reduce((total, item) => total + item.images.length, 0);
 
@@ -860,6 +861,8 @@ function App() {
 }
 
 export default App;
+
+
 
 
 
