@@ -775,7 +775,7 @@ function App() {
       <div className="bottom-app-shell d-lg-none">
         <nav className="bottom-app-nav" aria-label="Bottom navigation">
           {bottomMenu.map((item) => (
-            <a key={item.label} href={item.href} className={item.featured ? "bottom-nav-item bottom-nav-feature" : "bottom-nav-item"}>
+            <a key={item.label} href={item.href} className={item.featured ? `bottom-nav-item tone-${item.tone} bottom-nav-feature` : `bottom-nav-item tone-${item.tone}`}>
               <span className="bottom-nav-icon"><Icon name={item.icon} /></span>
               <span>{item.label}</span>
             </a>
@@ -787,6 +787,7 @@ function App() {
 }
 
 export default App;
+
 
 
 

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
 
 :root {
   color-scheme: light;
@@ -31,7 +31,7 @@ html {
 
 body {
   margin: 0;
-  font-family: "Inter", sans-serif;
+  font-family: "Poppins", sans-serif;
   background: var(--page-bg);
   color: var(--text);
 }
@@ -123,8 +123,13 @@ img {
 }
 
 .site-header {
-  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 1050;
+  background: rgba(255, 255, 255, 0.96);
   border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.04);
 }
 
 .top-header {
@@ -2421,3 +2426,4 @@ img {
     height: 10px;
   }
 }
+
