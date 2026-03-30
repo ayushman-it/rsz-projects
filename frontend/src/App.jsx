@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const PHONE_NUMBER_DISPLAY = "+91 9522675728";
 const PHONE_NUMBER_TEL = "+919522675728";
@@ -30,6 +30,50 @@ const promoCards = [
     action: "Shop Now",
     targetCategory: "cooler-repair",
     image: "https://www.revampservice.com/web-assets/assets/img/whyus-cooler.png",
+  },
+];
+
+const trustMetrics = [
+  { value: "10+", label: "Years in Repair Service", icon: "services" },
+  { value: "1000+", label: "Positive Customer Feedback", icon: "heart" },
+  { value: "24/7", label: "Booking Support Availability", icon: "phone" },
+  { value: "Doorstep", label: "Visit Assistance Across Categories", icon: "support" },
+];
+
+const trustPromises = [
+  "Experienced technicians for home appliance and cooling repairs.",
+  "Transparent issue reporting with images and service notes.",
+  "Fast callback and booking flow for urgent repair requests.",
+];
+
+const reviewOverview = {
+  rating: "5.0",
+  headline: "Customer feedback from public listing results",
+  copy: "Current public review snippets linked to the business profile show strong local feedback for installation speed, repair precision, and overall service experience in Bhopal.",
+  location: "MP Nagar, Bhopal",
+};
+
+const customerReviews = [
+  {
+    name: "Shivam",
+    date: "29 May 2025",
+    service: "Appliance installation",
+    summary: "Shared that the team arrived on time, completed the installation quickly, and checked everything properly before leaving.",
+    source: "Public review snippet",
+  },
+  {
+    name: "Kishan",
+    date: "29 May 2025",
+    service: "Home utility repair",
+    summary: "Described the repair experience as precise and seamless, with attentive support and strong workmanship throughout the job.",
+    source: "Public review snippet",
+  },
+  {
+    name: "Local business profile",
+    date: "Current listing",
+    service: "AC and electronics repair",
+    summary: "Current business snippets present the shop as a trusted appliance and AC repair provider serving customers from the MP Nagar area in Bhopal.",
+    source: "Business listing summary",
   },
 ];
 
@@ -282,6 +326,11 @@ function Icon({ name }) {
         <path d="M12 20s-7-4.6-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.4-7 10-7 10z" {...common} />
       </svg>
     ),
+    star: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M12 4.5l2.3 4.7 5.2.8-3.8 3.7.9 5.3L12 16.6 7.4 19l.9-5.3-3.8-3.7 5.2-.8L12 4.5z" fill="currentColor" stroke="none" />
+      </svg>
+    ),
     cart: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
         <circle cx="9" cy="20" r="1.5" {...common} />
@@ -374,6 +423,16 @@ function Icon({ name }) {
         <path d="M7 17L17 7M9 7h8v8" {...common} />
       </svg>
     ),
+    "arrow-left": (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M15 6l-6 6 6 6" {...common} />
+      </svg>
+    ),
+    "arrow-right": (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="icon-svg">
+        <path d="M9 6l6 6-6 6" {...common} />
+      </svg>
+    ),
   };
 
   return icons[name] || null;
@@ -426,6 +485,7 @@ function App() {
   const [problemText, setProblemText] = useState("");
   const [problemImages, setProblemImages] = useState([]);
   const [submittedDetails, setSubmittedDetails] = useState(false);
+  const reviewSliderRef = useRef(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setLoading(false), 1200);
@@ -556,6 +616,23 @@ function App() {
 
   const getProductQuantity = (productId) => cartItems.filter((item) => item.id === productId).length;
 
+  const handleReviewSliderScroll = (direction) => {
+    const slider = reviewSliderRef.current;
+
+    if (!slider) {
+      return;
+    }
+
+    const firstCard = slider.querySelector(".review-card");
+    const sliderStyles = window.getComputedStyle(slider);
+    const gap = Number.parseFloat(sliderStyles.columnGap || sliderStyles.gap || "0");
+    const baseWidth = firstCard ? firstCard.getBoundingClientRect().width + gap : slider.clientWidth * 0.86;
+
+    slider.scrollBy({
+      left: direction === "next" ? baseWidth : -baseWidth,
+      behavior: "smooth",
+    });
+  };
   return (
     <div className="header-demo-shell" id="top">
       {loading ? <Loader /> : null}
@@ -688,8 +765,7 @@ function App() {
                 </div>
               </div>
             </div>
-
-            <div className="service-tab-block" id="services-catalog">
+<div className="service-tab-block" id="services-catalog">
               <div className="service-tab-header">
                 <div className="service-tab-copy">
                   <p className="service-tab-kicker">Browse Categories</p>
@@ -799,6 +875,31 @@ function App() {
               </div>
             </div>
 
+<section className="trust-section" aria-labelledby="trustSectionTitle">
+              <div className="trust-copy-block">
+                <p className="service-tab-kicker">Why Customers Trust Us</p>
+                <h2 id="trustSectionTitle">100 percent trusted repair service support backed by 10+ years of experience and 1000+ positive customer feedback.</h2>
+                <p className="trust-description">We have been handling appliance and electronics repair support for more than 10 years, with 1000+ positive feedback entries and a doorstep-first booking flow built around fast problem reporting.</p>
+                <div className="trust-promise-list">
+                  {trustPromises.map((item) => (
+                    <div key={item} className="trust-promise-item">
+                      <span className="trust-promise-dot" aria-hidden="true"></span>
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="trust-metrics-grid" aria-label="Trust metrics">
+                {trustMetrics.map((metric) => (
+                  <article key={metric.label} className="trust-metric-card">
+                    <span className="trust-metric-icon" aria-hidden="true"><Icon name={metric.icon} /></span>
+                    <strong>{metric.value}</strong>
+                    <p>{metric.label}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
             <div className="brand-showcase-block">
               <div className="brand-showcase-header">
                 <div>
@@ -820,6 +921,67 @@ function App() {
                 ))}
               </div>
             </div>
+
+            <section className="reviews-section" aria-labelledby="reviewsSectionTitle">
+              <div className="reviews-summary-card">
+                <p className="service-tab-kicker">Public Feedback</p>
+                <h2 id="reviewsSectionTitle">Customer Reviews</h2>
+                <p className="reviews-summary-copy">Public feedback highlights from your business listing in Bhopal, shown in a clean swipeable review slider.</p>
+                <div className="reviews-summary-rating">
+                  <div>
+                    <strong>{reviewOverview.rating}</strong>
+                    <span>Average public rating signal</span>
+                  </div>
+                  <div className="reviews-summary-stars" aria-label="5 star rating">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <span key={index} className="reviews-star"><Icon name="star" /></span>
+                    ))}
+                  </div>
+                </div>
+                <div className="reviews-summary-meta">
+                  <span className="reviews-summary-pill">{reviewOverview.headline}</span>
+                  <span className="reviews-summary-pill">{reviewOverview.location}</span>
+                </div>
+
+                <div className="reviews-slider-shell">
+                  <div className="reviews-slider-header">
+                    <div>
+                      <p className="reviews-slider-label">Review Slider</p>
+                      <h3>Swipe through recent public feedback.</h3>
+                    </div>
+                    <div className="reviews-slider-controls" aria-label="Review slider controls">
+                      <button type="button" className="reviews-slider-button" onClick={() => handleReviewSliderScroll("prev")} aria-label="Previous reviews">
+                        <Icon name="arrow-left" />
+                      </button>
+                      <button type="button" className="reviews-slider-button" onClick={() => handleReviewSliderScroll("next")} aria-label="Next reviews">
+                        <Icon name="arrow-right" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="reviews-slider-track" ref={reviewSliderRef} aria-label="Customer review highlights">
+                    {customerReviews.map((review) => (
+                      <article key={`${review.name}-${review.date}`} className="review-card review-card-slide">
+                        <div className="review-card-header">
+                          <div>
+                            <h3>{review.name}</h3>
+                            <p>{review.service}</p>
+                          </div>
+                          <span className="review-card-date">{review.date}</span>
+                        </div>
+                        <div className="reviews-card-stars" aria-hidden="true">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <span key={index} className="reviews-star"><Icon name="star" /></span>
+                          ))}
+                        </div>
+                        <p className="review-card-copy">{review.summary}</p>
+                        <span className="review-card-source">{review.source}</span>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
           </section>
         ) : (
           <section className="cart-page-shell" id="cart-page">
@@ -926,11 +1088,6 @@ function App() {
             ))}
 
             <div className="footer-newsletter-column">
-              <h3>Join Our Newsletter And Get 50% Discount For Your First Service Request</h3>
-              <form className="footer-newsletter-form" onSubmit={(event) => event.preventDefault()}>
-                <input type="email" placeholder="Your email address..." aria-label="Your email address" />
-                <button type="submit" aria-label="Join newsletter"><Icon name="arrow-up-right" /></button>
-              </form>
               <div className="footer-socials" aria-label="Social media links">
                 {footerSocials.map((social) => (
                   <a key={social.label} href="#" className="footer-social-link" aria-label={social.label}>
@@ -1031,6 +1188,23 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
