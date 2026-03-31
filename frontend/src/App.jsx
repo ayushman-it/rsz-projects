@@ -858,10 +858,6 @@ function App() {
                         <div className="product-card-copy">
                           <p className="product-card-category">{product.category}</p>
                           <h4>{product.name}</h4>
-                          <div className="product-card-pricing">
-                            <span className="product-price-current">Starts {formatCurrency(product.price)}</span>
-                            <span className="product-price-old">up to {formatCurrency(product.compareAt)}</span>
-                          </div>
                           <p className="product-card-note">{quantity > 0 ? `${quantity} request${quantity === 1 ? "" : "s"} added` : "Add your issue details in the modal"}</p>
                           <div className="product-card-actions">
                             <button type="button" className="product-add-button" onClick={() => handleOpenBookingModal(product)}>Book Service</button>
