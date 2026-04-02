@@ -1608,7 +1608,7 @@ function App() {
           </div>
 
           <div className="footer-bottom-bar">
-            <p>Repair Service Zone ? 2026. All Rights Reserved.</p>
+            <p>Repair Service Zone - 2026. All Rights Reserved.</p>
             <div className="footer-payment-row" aria-label="Payment methods">
               {footerPayments.map((payment) => (
                 <span key={payment.type} className={`footer-payment-badge footer-payment-badge-${payment.type}`}>
@@ -1729,7 +1729,7 @@ function App() {
               return <a key={item.label} href={item.href} className={className}>{content}</a>;
             }
 
-            return <button key={item.label} type="button" className={className} onClick={item.onClick}>{content}</button>;
+            return <a key={item.label} type="button" className={className} onClick={item.onClick}>{content}</a>;
           })}
         </nav>
       </div>
@@ -1738,6 +1738,7 @@ function App() {
 }
 
 export default App;
+
 
 
 

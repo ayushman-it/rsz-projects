@@ -6056,7 +6056,7 @@ button.bottom-nav-item {
 .sticky-call-button {
   position: fixed;
   right: 1rem;
-  bottom: calc(5.9rem + env(safe-area-inset-bottom));
+  bottom: calc(6.9rem + env(safe-area-inset-bottom));
   z-index: 1170;
   display: inline-flex;
   align-items: center;
@@ -6092,9 +6092,10 @@ button.bottom-nav-item {
 
   .sticky-call-button {
     right: 0.75rem;
-    bottom: calc(5.85rem + env(safe-area-inset-bottom));
+    bottom: calc(6.85rem + env(safe-area-inset-bottom));
     min-height: 42px;
     padding: 0 0.82rem;
+    color: white !important;
   }
 
   .sticky-call-icon {
@@ -6104,5 +6105,213 @@ button.bottom-nav-item {
 
   .sticky-call-button span:last-child {
     font-size: 0.72rem;
+  }
+}
+
+/* Final typography refinement: smaller scale, cleaner line-height, same design */
+body {
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.header-demo-shell,
+.services-page,
+.about-page {
+  text-rendering: optimizeLegibility;
+}
+
+.site-header,
+.main-shell,
+.site-footer,
+.auth-modal-card,
+.service-modal-card,
+.install-prompt-card {
+  font-size: 0.95rem;
+}
+
+.support-email,
+.support-phone,
+.nav-link-item,
+.meta-button,
+.offcanvas-nav a,
+.offcanvas-link-button,
+.offcanvas-action-button,
+.footer-address,
+.footer-hours,
+.footer-link-list a,
+.footer-bottom-bar p,
+.footer-payment-badge,
+.cart-summary-note,
+.cart-request-meta,
+.cart-request-issue p,
+.cart-item-category,
+.cart-item-price,
+.service-modal-label,
+.service-modal-field small,
+.auth-modal-copy,
+.auth-note,
+.auth-feedback,
+.install-prompt-card p {
+  line-height: 1.6;
+}
+
+.promo-copy p:last-of-type,
+.promo-card-side .promo-copy p:last-of-type,
+.service-tab-description,
+.service-tab-panel-copy,
+.catalog-copy,
+.trust-description,
+.review-card-copy,
+.reviews-summary-copy,
+.cart-page-copy,
+.cart-empty-state p,
+.cart-summary-note,
+.services-hero-text,
+.services-stage-copy p,
+.services-stage-mini p,
+.services-category-text,
+.services-section-copy,
+.services-product-note,
+.services-proof-item,
+.services-review-text,
+.about-hero-text,
+.about-panel-copy,
+.about-list-item,
+.about-workflow-card p,
+.about-seo-card p,
+.about-faq-item p,
+.about-proof-item p {
+  font-size: 0.9rem;
+  line-height: 1.68;
+}
+
+.promo-copy h1 {
+  font-size: clamp(1.85rem, 4vw, 3.2rem);
+  line-height: 1.02;
+}
+
+.promo-copy h2,
+.service-tab-copy h2,
+.catalog-toolbar-copy h3,
+.trust-copy-block h2,
+.brand-showcase-header h2,
+.reviews-summary-card h2,
+.cart-page-hero h1,
+.services-hero-copy h1,
+.services-section-head h2,
+.services-proof-panel h2,
+.about-hero-copy h1,
+.about-section-head h2 {
+  line-height: 1.12;
+}
+
+.promo-copy h2 {
+  font-size: clamp(1.35rem, 2.1vw, 1.95rem);
+}
+
+.service-tab-copy h2,
+.trust-copy-block h2,
+.brand-showcase-header h2,
+.reviews-summary-card h2,
+.cart-page-hero h1,
+.services-section-head h2,
+.services-proof-panel h2,
+.about-section-head h2 {
+  font-size: clamp(1.3rem, 2.3vw, 2.2rem);
+}
+
+.service-tab-kicker,
+.services-eyebrow,
+.about-kicker,
+.cart-summary-kicker,
+.catalog-category-label,
+.services-product-tag,
+.services-review-topic,
+.reviews-slider-label,
+.offcanvas-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+
+.service-tab-panel-label,
+.catalog-meta-pill,
+.catalog-route-pill,
+.cart-page-pill,
+.services-catalog-meta,
+.services-hero-notes span,
+.services-category-meta,
+.services-review-meta,
+.about-panel-label,
+.about-signal-pill {
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.product-card-copy h4,
+.brand-card-copy h3,
+.review-card h3,
+.services-product-copy h3,
+.services-review-card h3,
+.about-workflow-card h3,
+.about-seo-card h3,
+.about-faq-item h3,
+.cart-item-copy h3 {
+  line-height: 1.3;
+}
+
+.product-add-button,
+.product-cart-link,
+.catalog-open-cart,
+.cart-page-back,
+.cart-summary-primary,
+.cart-summary-secondary,
+.services-primary-action,
+.services-secondary-action,
+.services-stage-link,
+.services-mini-action,
+.services-inline-link,
+.services-cart-pill,
+.services-card-primary,
+.services-card-secondary,
+.about-primary-action,
+.about-secondary-action,
+.auth-submit-button,
+.auth-secondary-button,
+.install-prompt-primary,
+.install-prompt-secondary,
+.sticky-call-button {
+  font-size: 0.82rem;
+  line-height: 1.2;
+}
+
+.auth-modal-header h2,
+.service-modal-header h2,
+.install-prompt-card h3 {
+  line-height: 1.18;
+}
+
+@media (max-width: 767.98px) {
+  body {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .promo-copy h1,
+  .services-hero-copy h1,
+  .about-hero-copy h1,
+  .cart-page-hero h1 {
+    line-height: 1.14;
+  }
+
+  .promo-copy p:last-of-type,
+  .services-hero-text,
+  .services-section-copy,
+  .about-hero-text,
+  .about-workflow-card p,
+  .about-seo-card p,
+  .about-faq-item p,
+  .cart-page-copy {
+    font-size: 0.86rem;
+    line-height: 1.62;
   }
 }
