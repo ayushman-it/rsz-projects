@@ -1,10 +1,32 @@
-import { useEffect, useRef, useState } from "react";
+ï»¿import { useEffect, useRef, useState } from "react";
+import ServicesPage from "./pages/Services";
+import AboutPage from "./pages/About";
 
 const PHONE_NUMBER_DISPLAY = "+91 9522675728";
 const PHONE_NUMBER_TEL = "+919522675728";
 const WHATSAPP_URL = "https://wa.me/919522675728";
 
-const mainNav = ["Home", "Services", "About", "Contact", "Blog"];
+const AUTH_VIEW = {
+  LOGIN: "login",
+  SIGNUP: "signup",
+};
+
+const AUTH_STEP = {
+  LOGIN_MOBILE: "login-mobile",
+  SIGNUP_DETAILS: "signup-details",
+  OTP: "otp",
+  SUCCESS: "success",
+};
+
+const SIGNUP_FORM_INITIAL = {
+  name: "",
+  address: "",
+  city: "",
+  pincode: "",
+  mobile: "",
+};
+
+const DEMO_OTP = "4826";
 
 const promoCards = [
   {
@@ -257,8 +279,16 @@ const defaultCategorySlug = serviceCategories[0].slug;
 function getRouteFromHash(hash) {
   const normalizedHash = hash.replace(/^#\/?/, "");
 
-  if (!normalizedHash || normalizedHash === "top" || normalizedHash === "services") {
+  if (!normalizedHash || normalizedHash === "top" || normalizedHash === "home") {
+    return { page: "home", category: defaultCategorySlug };
+  }
+
+  if (normalizedHash === "services") {
     return { page: "services", category: defaultCategorySlug };
+  }
+
+  if (normalizedHash === "about") {
+    return { page: "about", category: defaultCategorySlug };
   }
 
   if (normalizedHash === "cart") {
@@ -275,7 +305,7 @@ function getRouteFromHash(hash) {
     };
   }
 
-  return { page: "services", category: defaultCategorySlug };
+  return { page: "home", category: defaultCategorySlug };
 }
 
 function formatCurrency(value) {
@@ -289,6 +319,20 @@ function readFileAsDataUrl(file) {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+function maskMobileNumber(value = "") {
+  const digits = value.replace(/\D/g, "");
+
+  if (digits.length !== 10) {
+    return value;
+  }
+
+  return `+91 ${digits.slice(0, 2)}******${digits.slice(-2)}`;
+}
+
+function isValidIndianMobile(value) {
+  return value.replace(/\D/g, "").length === 10;
 }
 
 function Icon({ name }) {
@@ -438,7 +482,8 @@ function Icon({ name }) {
   return icons[name] || null;
 }
 
-function IconButton({ label, icon, badge, href }) {
+function IconButton({ label, icon, badge, href, onClick, active = false }) {
+  const className = active ? "icon-button icon-button-active" : "icon-button";
   const content = (
     <>
       <span className="icon-symbol" aria-hidden="true"><Icon name={icon} /></span>
@@ -447,15 +492,15 @@ function IconButton({ label, icon, badge, href }) {
   );
 
   if (href) {
-    return <a href={href} className="icon-button" aria-label={label}>{content}</a>;
+    return <a href={href} className={className} aria-label={label} onClick={onClick}>{content}</a>;
   }
 
-  return <button type="button" className="icon-button" aria-label={label}>{content}</button>;
+  return <button type="button" className={className} aria-label={label} onClick={onClick}>{content}</button>;
 }
 
 function BrandLogo({ mobile = false }) {
   return (
-    <a href="#top" className={mobile ? "brand-logo brand-logo-mobile" : "brand-logo"} aria-label="Repair Service Zone home">
+    <a href="#home" className={mobile ? "brand-logo brand-logo-mobile" : "brand-logo"} aria-label="Repair Service Zone home">
       <span className="brand-badge">RSZ</span>
       <span className="brand-copy">
         <span className="brand-copy-top">Repair Service</span>
@@ -475,9 +520,158 @@ function Loader() {
   );
 }
 
+function AuthModal({
+  mode,
+  step,
+  loginMobile,
+  signupForm,
+  otpCode,
+  feedback,
+  onClose,
+  onModeChange,
+  onLoginMobileChange,
+  onSignupFieldChange,
+  onRequestLoginOtp,
+  onRequestSignupOtp,
+  onOtpCodeChange,
+  onVerifyOtp,
+  onBack,
+}) {
+  const isLogin = mode === AUTH_VIEW.LOGIN;
+  const activeMobile = isLogin ? loginMobile : signupForm.mobile;
+  const activeName = isLogin ? "RSZ Customer" : signupForm.name.trim() || "RSZ Customer";
+
+  return (
+    <div className="auth-modal-backdrop" role="presentation" onClick={onClose}>
+      <div className="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="authModalTitle" onClick={(event) => event.stopPropagation()}>
+        <div className="auth-modal-header">
+          <div>
+            <p className="auth-modal-kicker">Repair Service Zone</p>
+            <h2 id="authModalTitle">Secure login and signup</h2>
+            <p className="auth-modal-copy">Use one centered flow for OTP verification, saved details, and faster doorstep booking.</p>
+          </div>
+          <button type="button" className="auth-modal-close" aria-label="Close login and signup modal" onClick={onClose}>
+            <Icon name="close" />
+          </button>
+        </div>
+
+        <div className="auth-switch" role="tablist" aria-label="Authentication mode">
+          <button type="button" className={isLogin ? "auth-switch-button auth-switch-button-active" : "auth-switch-button"} onClick={() => onModeChange(AUTH_VIEW.LOGIN)}>
+            Login
+          </button>
+          <button type="button" className={!isLogin ? "auth-switch-button auth-switch-button-active" : "auth-switch-button"} onClick={() => onModeChange(AUTH_VIEW.SIGNUP)}>
+            Sign Up
+          </button>
+        </div>
+
+        {step === AUTH_STEP.SUCCESS ? (
+          <div className="auth-success-card">
+            <p className="auth-modal-kicker">Verified Account</p>
+            <h3>{activeName}</h3>
+            <p>{maskMobileNumber(activeMobile)} is ready for booking updates, technician callbacks, and service confirmations.</p>
+            <button type="button" className="auth-submit-button" onClick={onClose}>Continue</button>
+          </div>
+        ) : isLogin ? (
+          <div className="auth-flow-card">
+            {step === AUTH_STEP.LOGIN_MOBILE ? (
+              <form className="auth-form-stack" onSubmit={(event) => { event.preventDefault(); onRequestLoginOtp(); }}>
+                <label className="auth-field">
+                  <span>Mobile number</span>
+                  <input type="tel" inputMode="numeric" autoComplete="tel" placeholder="Enter 10-digit mobile number" value={loginMobile} onChange={onLoginMobileChange} maxLength={10} />
+                </label>
+                <button type="submit" className="auth-submit-button">Send OTP</button>
+              </form>
+            ) : (
+              <div className="auth-form-stack">
+                <div className="auth-step-summary">
+                  <p>OTP sent to</p>
+                  <strong>{maskMobileNumber(activeMobile)}</strong>
+                </div>
+                <label className="auth-field">
+                  <span>Enter 4-digit OTP</span>
+                  <input type="text" inputMode="numeric" autoComplete="one-time-code" placeholder="4826" value={otpCode} onChange={onOtpCodeChange} maxLength={4} />
+                </label>
+                <div className="auth-inline-row">
+                  <button type="button" className="auth-secondary-button" onClick={onBack}>Change Number</button>
+                  <button type="button" className="auth-submit-button" onClick={onVerifyOtp}>Verify OTP</button>
+                </div>
+                <p className="auth-note">Demo OTP: 4826</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="auth-flow-card">
+            {step === AUTH_STEP.SIGNUP_DETAILS ? (
+              <form className="auth-form-stack" onSubmit={(event) => { event.preventDefault(); onRequestSignupOtp(); }}>
+                <div className="auth-grid">
+                  <label className="auth-field">
+                    <span>Full name</span>
+                    <input type="text" name="name" autoComplete="name" placeholder="Enter your full name" value={signupForm.name} onChange={onSignupFieldChange} />
+                  </label>
+                  <label className="auth-field">
+                    <span>City</span>
+                    <input type="text" name="city" autoComplete="address-level2" placeholder="Enter your city" value={signupForm.city} onChange={onSignupFieldChange} />
+                  </label>
+                  <label className="auth-field auth-field-full">
+                    <span>Address</span>
+                    <textarea name="address" rows="3" autoComplete="street-address" placeholder="House number, street, landmark" value={signupForm.address} onChange={onSignupFieldChange}></textarea>
+                  </label>
+                  <label className="auth-field">
+                    <span>Pincode</span>
+                    <input type="text" name="pincode" inputMode="numeric" autoComplete="postal-code" placeholder="6-digit pincode" value={signupForm.pincode} onChange={onSignupFieldChange} maxLength={6} />
+                  </label>
+                  <label className="auth-field">
+                    <span>Mobile number</span>
+                    <input type="tel" name="mobile" inputMode="numeric" autoComplete="tel" placeholder="10-digit mobile number" value={signupForm.mobile} onChange={onSignupFieldChange} maxLength={10} />
+                  </label>
+                </div>
+                <button type="submit" className="auth-submit-button">Continue with OTP</button>
+              </form>
+            ) : (
+              <div className="auth-form-stack">
+                <div className="auth-step-summary">
+                  <p>OTP sent for signup</p>
+                  <strong>{activeName} ï¿½ {maskMobileNumber(activeMobile)}</strong>
+                </div>
+                <label className="auth-field">
+                  <span>Enter 4-digit OTP</span>
+                  <input type="text" inputMode="numeric" autoComplete="one-time-code" placeholder="4826" value={otpCode} onChange={onOtpCodeChange} maxLength={4} />
+                </label>
+                <div className="auth-inline-row">
+                  <button type="button" className="auth-secondary-button" onClick={onBack}>Edit Details</button>
+                  <button type="button" className="auth-submit-button" onClick={onVerifyOtp}>Create Account</button>
+                </div>
+                <p className="auth-note">Demo OTP: 4826</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {feedback ? <p className="auth-feedback">{feedback}</p> : null}
+      </div>
+    </div>
+  );
+}
+
+function InstallPromptCard({ onInstall, onDismiss }) {
+  return (
+    <div className="install-prompt-card" role="dialog" aria-live="polite" aria-label="Install Repair Service Zone app">
+      <div>
+        <p className="install-prompt-kicker">Install App</p>
+        <h3>Get Repair Service Zone on your home screen</h3>
+        <p>Open faster, keep the booking flow handy, and launch it like a real app.</p>
+      </div>
+      <div className="install-prompt-actions">
+        <button type="button" className="install-prompt-secondary" onClick={onDismiss}>Later</button>
+        <button type="button" className="install-prompt-primary" onClick={onInstall}>Install Now</button>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [loading, setLoading] = useState(true);
-  const [activePage, setActivePage] = useState("services");
+  const [activePage, setActivePage] = useState("home");
   const [activeCategory, setActiveCategory] = useState(defaultCategorySlug);
   const [cartItems, setCartItems] = useState([]);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
@@ -485,7 +679,16 @@ function App() {
   const [problemText, setProblemText] = useState("");
   const [problemImages, setProblemImages] = useState([]);
   const [submittedDetails, setSubmittedDetails] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authView, setAuthView] = useState(AUTH_VIEW.LOGIN);
+  const [authStep, setAuthStep] = useState(AUTH_STEP.LOGIN_MOBILE);
+  const [loginMobile, setLoginMobile] = useState("");
+  const [signupForm, setSignupForm] = useState(SIGNUP_FORM_INITIAL);
+  const [otpCode, setOtpCode] = useState("");
+  const [authFeedback, setAuthFeedback] = useState("");
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const reviewSliderRef = useRef(null);
+  const installPromptEventRef = useRef(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setLoading(false), 1200);
@@ -513,13 +716,80 @@ function App() {
   const cartCount = cartItems.length;
   const attachedImageCount = cartItems.reduce((total, item) => total + item.images.length, 0);
 
-  const bottomMenu = [
-    { label: "Home", href: "#top", icon: "home", tone: "rose" },
-    { label: "Call", href: `tel:${PHONE_NUMBER_TEL}`, icon: "phone", tone: "amber" },
-    { label: "Whatsapp", href: WHATSAPP_URL, icon: "whatsapp", tone: "green", featured: true },
-    { label: "Services", href: `#services/${activeCategory}`, icon: "services", tone: "blue" },
-    { label: "Cart", href: "#cart", icon: "cart", tone: "violet" },
-  ];
+  useEffect(() => {
+    const descriptionMap = {
+      home: "Repair Service Zone helps customers browse appliance repair categories and reach doorstep service support faster.",
+      services: `Browse ${activeCategoryData.label} repair services, appliance categories, and doorstep booking support from Repair Service Zone.`,
+      about: "Learn about Repair Service Zone, a Bhopal-focused doorstep appliance repair brand covering ACs, coolers, washing machines, refrigerators, and home utility repairs.",
+      cart: "Review selected repair requests, issue details, and booking information inside the Repair Service Zone cart preview.",
+    };
+
+    const titleMap = {
+      home: "Repair Service Zone | Doorstep Appliance Repair",
+      services: `${activeCategoryData.label} Services | Repair Service Zone`,
+      about: "About Repair Service Zone | Appliance Repair in Bhopal",
+      cart: "Service Cart | Repair Service Zone",
+    };
+
+    document.title = titleMap[activePage] || titleMap.home;
+
+    const ensureMeta = (selector, attributes) => {
+      let element = document.head.querySelector(selector);
+      if (!element) {
+        element = document.createElement("meta");
+        Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+        document.head.appendChild(element);
+      }
+      return element;
+    };
+
+    const description = descriptionMap[activePage] || descriptionMap.home;
+    ensureMeta("meta[name=\"description\"]", { name: "description" }).setAttribute("content", description);
+    ensureMeta("meta[property=\"og:title\"]", { property: "og:title" }).setAttribute("content", document.title);
+    ensureMeta("meta[property=\"og:description\"]", { property: "og:description" }).setAttribute("content", description);
+  }, [activeCategoryData.label, activePage]);
+
+  useEffect(() => {
+    if (!authModalOpen && !bookingModalOpen) {
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [authModalOpen, bookingModalOpen]);
+
+  useEffect(() => {
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    const dismissed = window.localStorage.getItem("rsz-install-dismissed") === "true";
+
+    if (isStandalone || dismissed) {
+      return undefined;
+    }
+
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault();
+      installPromptEventRef.current = event;
+      setShowInstallPrompt(true);
+    };
+
+    const handleAppInstalled = () => {
+      installPromptEventRef.current = null;
+      setShowInstallPrompt(false);
+      window.localStorage.setItem("rsz-install-dismissed", "true");
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
+  }, []);
 
   const updateHashRoute = (hashValue, { replace = false } = {}) => {
     const nextUrl = `${window.location.pathname}${window.location.search}#${hashValue}`;
@@ -527,15 +797,39 @@ function App() {
     window.history[method](null, "", nextUrl);
   };
 
+  const handleOpenHome = () => {
+    setActivePage("home");
+    updateHashRoute("home");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const handleCategoryChange = (slug) => {
-    setActivePage("services");
     setActiveCategory(slug);
+
+    if (activePage === "home") {
+      updateHashRoute("home", { replace: true });
+      return;
+    }
+
+    setActivePage("services");
     updateHashRoute(`services/${slug}`, { replace: true });
   };
 
   const handleOpenCart = () => {
     setActivePage("cart");
     updateHashRoute("cart");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleOpenServicesLanding = () => {
+    setActivePage("services");
+    updateHashRoute("services");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleOpenAbout = () => {
+    setActivePage("about");
+    updateHashRoute("about");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -547,13 +841,18 @@ function App() {
   };
 
   const handlePromoCategoryOpen = (slug) => {
-    setActivePage("services");
     setActiveCategory(slug);
-    updateHashRoute(`services/${slug}`);
 
-    window.setTimeout(() => {
-      document.getElementById("services-catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 80);
+    if (activePage === "home") {
+      updateHashRoute("home", { replace: true });
+      window.setTimeout(() => {
+        document.getElementById("services-catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
+      return;
+    }
+
+    setActivePage("services");
+    updateHashRoute(`services/${slug}`);
   };
 
   const handleOpenBookingModal = (product) => {
@@ -633,6 +932,125 @@ function App() {
       behavior: "smooth",
     });
   };
+
+  const handleOpenAuthModal = (mode = AUTH_VIEW.LOGIN) => {
+    setAuthView(mode);
+    setAuthStep(mode === AUTH_VIEW.LOGIN ? AUTH_STEP.LOGIN_MOBILE : AUTH_STEP.SIGNUP_DETAILS);
+    setOtpCode("");
+    setAuthFeedback("");
+    setAuthModalOpen(true);
+  };
+
+  const handleCloseAuthModal = () => {
+    setAuthModalOpen(false);
+    setAuthView(AUTH_VIEW.LOGIN);
+    setAuthStep(AUTH_STEP.LOGIN_MOBILE);
+    setLoginMobile("");
+    setSignupForm(SIGNUP_FORM_INITIAL);
+    setOtpCode("");
+    setAuthFeedback("");
+  };
+
+  const handleAuthModeChange = (mode) => {
+    setAuthView(mode);
+    setAuthStep(mode === AUTH_VIEW.LOGIN ? AUTH_STEP.LOGIN_MOBILE : AUTH_STEP.SIGNUP_DETAILS);
+    setOtpCode("");
+    setAuthFeedback("");
+  };
+
+  const handleLoginMobileChange = (event) => {
+    setLoginMobile(event.target.value.replace(/\D/g, "").slice(0, 10));
+  };
+
+  const handleSignupFieldChange = (event) => {
+    const { name, value } = event.target;
+    let nextValue = value;
+
+    if (name === "mobile") {
+      nextValue = value.replace(/\D/g, "").slice(0, 10);
+    }
+
+    if (name === "pincode") {
+      nextValue = value.replace(/\D/g, "").slice(0, 6);
+    }
+
+    setSignupForm((current) => ({
+      ...current,
+      [name]: nextValue,
+    }));
+  };
+
+  const handleRequestLoginOtp = () => {
+    if (!isValidIndianMobile(loginMobile)) {
+      setAuthFeedback("Enter a valid 10-digit mobile number to continue.");
+      return;
+    }
+
+    setAuthStep(AUTH_STEP.OTP);
+    setOtpCode("");
+    setAuthFeedback(`OTP sent to ${maskMobileNumber(loginMobile)}. Use 4826 for this demo.`);
+  };
+
+  const handleRequestSignupOtp = () => {
+    const { name, address, city, pincode, mobile } = signupForm;
+
+    if (!name.trim() || !address.trim() || !city.trim() || pincode.length !== 6 || !isValidIndianMobile(mobile)) {
+      setAuthFeedback("Complete name, address, city, pincode, and mobile number before continuing.");
+      return;
+    }
+
+    setAuthStep(AUTH_STEP.OTP);
+    setOtpCode("");
+    setAuthFeedback(`OTP sent to ${maskMobileNumber(mobile)}. Use 4826 for this demo.`);
+  };
+
+  const handleVerifyOtp = () => {
+    if (otpCode.trim() !== DEMO_OTP) {
+      setAuthFeedback("Enter the correct OTP to verify this flow.");
+      return;
+    }
+
+    setAuthStep(AUTH_STEP.SUCCESS);
+    setAuthFeedback("Verification complete. Your account flow is ready.");
+  };
+
+  const handleBackFromOtp = () => {
+    setAuthStep(authView === AUTH_VIEW.LOGIN ? AUTH_STEP.LOGIN_MOBILE : AUTH_STEP.SIGNUP_DETAILS);
+    setOtpCode("");
+    setAuthFeedback("");
+  };
+
+  const handleDismissInstallPrompt = () => {
+    setShowInstallPrompt(false);
+    window.localStorage.setItem("rsz-install-dismissed", "true");
+  };
+
+  const handleInstallApp = async () => {
+    const installEvent = installPromptEventRef.current;
+
+    if (!installEvent) {
+      handleDismissInstallPrompt();
+      return;
+    }
+
+    installEvent.prompt();
+    const outcome = await installEvent.userChoice;
+
+    if (outcome?.outcome === "accepted") {
+      installPromptEventRef.current = null;
+      setShowInstallPrompt(false);
+      window.localStorage.setItem("rsz-install-dismissed", "true");
+    }
+  };
+
+  const bottomMenu = [
+    { label: "Home", href: "#home", icon: "home", tone: "rose", active: activePage === "home" },
+    { label: "Services", href: "#services", icon: "services", tone: "blue", active: activePage === "services" },
+    { label: "WhatsApp", href: WHATSAPP_URL, icon: "whatsapp", tone: "green", active: false },
+    { label: "Account", icon: "user", tone: "violet", active: authModalOpen, onClick: () => handleOpenAuthModal(AUTH_VIEW.LOGIN) },
+    { label: "Cart", href: "#cart", icon: "cart", tone: "green", active: activePage === "cart", badge: cartCount > 0 ? cartCount : null },
+  ];
+
   return (
     <div className="header-demo-shell" id="top">
       {loading ? <Loader /> : null}
@@ -659,7 +1077,7 @@ function App() {
                   </div>
                 </div>
                 <div className="utility-icons">
-                  <IconButton label="Login or signup" icon="user" />
+                  <IconButton label="Login or signup" icon="user" onClick={() => handleOpenAuthModal(AUTH_VIEW.LOGIN)} active={authModalOpen} />
                   <IconButton label="Wishlist" icon="heart" />
                   <IconButton label="Cart" icon="cart" badge={cartCount} href="#cart" />
                 </div>
@@ -672,7 +1090,7 @@ function App() {
               <button type="button" className="mobile-menu-button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-label="Open menu"><Icon name="menu" /></button>
               <BrandLogo mobile />
               <div className="mobile-actions">
-                <IconButton label="Wishlist" icon="heart" />
+                <IconButton label="Login or signup" icon="user" onClick={() => handleOpenAuthModal(AUTH_VIEW.LOGIN)} active={authModalOpen} />
                 <IconButton label="Cart" icon="cart" badge={cartCount} href="#cart" />
               </div>
             </div>
@@ -683,13 +1101,14 @@ function App() {
           <div className="container-xl">
             <div className="nav-row">
               <nav className="primary-nav" aria-label="Primary">
-                {mainNav.map((item, index) => (
-                  <a key={item} href="#" className={index === 0 ? "nav-link-item nav-link-active" : "nav-link-item"}>
-                    {item}
-                    {(item === "Home" || item === "Blog") && <span className="caret" aria-hidden="true"><Icon name="chevron" /></span>}
-                  </a>
-                ))}
-                <a href="#" className="nav-link-item">Login / Signup</a>
+                <a href="#home" className={activePage === "home" ? "nav-link-item nav-link-active" : "nav-link-item"}>
+                  Home
+                  <span className="caret" aria-hidden="true"><Icon name="chevron" /></span>
+                </a>
+                <a href="#services" className={activePage === "services" ? "nav-link-item nav-link-active" : "nav-link-item"}>Services</a>
+                <a href="#about" className={activePage === "about" ? "nav-link-item nav-link-active" : "nav-link-item"}>About</a>
+                <a href={`tel:${PHONE_NUMBER_TEL}`} className="nav-link-item">Contact</a>
+                <button type="button" className="nav-link-item nav-link-button" onClick={() => handleOpenAuthModal(AUTH_VIEW.LOGIN)}>Login / Signup</button>
                 <a href="#cart" className="nav-link-item">Cart</a>
               </nav>
 
@@ -713,8 +1132,11 @@ function App() {
           <div className="offcanvas-section">
             <p className="offcanvas-label">Navigation</p>
             <nav className="offcanvas-nav" aria-label="Mobile navigation">
-              {mainNav.map((item) => <a key={item} href="#" data-bs-dismiss="offcanvas">{item}</a>)}
-              <a href="#" data-bs-dismiss="offcanvas">Login / Signup</a>
+              <a href="#home" data-bs-dismiss="offcanvas">Home</a>
+              <a href="#services" data-bs-dismiss="offcanvas">Services</a>
+              <a href="#about" data-bs-dismiss="offcanvas">About</a>
+              <a href={`tel:${PHONE_NUMBER_TEL}`} data-bs-dismiss="offcanvas">Contact</a>
+              <button type="button" className="offcanvas-link-button" data-bs-dismiss="offcanvas" onClick={() => handleOpenAuthModal(AUTH_VIEW.LOGIN)}>Login / Signup</button>
               <a href="#cart" data-bs-dismiss="offcanvas">Cart</a>
             </nav>
           </div>
@@ -735,7 +1157,7 @@ function App() {
       </div>
 
       <main className="container-xl pb-5 main-shell">
-        {activePage === "services" ? (
+        {activePage === "home" ? (
           <section className="promo-section" id="services-page">
             <div className="row g-3 align-items-stretch">
               <div className="col-xl-8">
@@ -979,6 +1401,22 @@ function App() {
               </div>
             </section>
           </section>
+        ) : activePage === "services" ? (
+          <ServicesPage
+            activeCategory={activeCategory}
+            cartCount={cartCount}
+            formatCurrency={formatCurrency}
+            getProductQuantity={getProductQuantity}
+            onOpenBookingModal={handleOpenBookingModal}
+            onOpenCart={handleOpenCart}
+            onSelectCategory={handleOpenServices}
+          />
+        ) : activePage === "about" ? (
+          <AboutPage
+            onOpenServices={handleOpenServicesLanding}
+            phoneDisplay={PHONE_NUMBER_DISPLAY}
+            phoneTel={PHONE_NUMBER_TEL}
+          />
         ) : (
           <section className="cart-page-shell" id="cart-page">
             <div className="cart-page-hero">
@@ -1095,7 +1533,7 @@ function App() {
           </div>
 
           <div className="footer-bottom-bar">
-            <p>Repair Service Zone © 2026. All Rights Reserved.</p>
+            <p>Repair Service Zone ï¿½ 2026. All Rights Reserved.</p>
             <div className="footer-payment-row" aria-label="Payment methods">
               {footerPayments.map((payment) => (
                 <span key={payment.type} className={`footer-payment-badge footer-payment-badge-${payment.type}`}>
@@ -1116,6 +1554,30 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {showInstallPrompt ? (
+        <InstallPromptCard onInstall={handleInstallApp} onDismiss={handleDismissInstallPrompt} />
+      ) : null}
+
+      {authModalOpen ? (
+        <AuthModal
+          mode={authView}
+          step={authStep}
+          loginMobile={loginMobile}
+          signupForm={signupForm}
+          otpCode={otpCode}
+          feedback={authFeedback}
+          onClose={handleCloseAuthModal}
+          onModeChange={handleAuthModeChange}
+          onLoginMobileChange={handleLoginMobileChange}
+          onSignupFieldChange={handleSignupFieldChange}
+          onRequestLoginOtp={handleRequestLoginOtp}
+          onRequestSignupOtp={handleRequestSignupOtp}
+          onOtpCodeChange={(event) => setOtpCode(event.target.value.replace(/\D/g, "").slice(0, 4))}
+          onVerifyOtp={handleVerifyOtp}
+          onBack={handleBackFromOtp}
+        />
+      ) : null}
 
       {bookingModalOpen && selectedService ? (
         <div className="service-modal-backdrop" role="presentation" onClick={handleCloseBookingModal}>
@@ -1171,12 +1633,24 @@ function App() {
 
       <div className="bottom-app-shell d-lg-none">
         <nav className="bottom-app-nav" aria-label="Bottom navigation">
-          {bottomMenu.map((item) => (
-            <a key={item.label} href={item.href} className={item.featured ? `bottom-nav-item tone-${item.tone} bottom-nav-feature` : `bottom-nav-item tone-${item.tone}`}>
-              <span className="bottom-nav-icon"><Icon name={item.icon} /></span>
-              <span>{item.label}</span>
-            </a>
-          ))}
+          {bottomMenu.map((item) => {
+            const className = item.active ? `bottom-nav-item tone-${item.tone} bottom-nav-item-active` : `bottom-nav-item tone-${item.tone}`;
+            const content = (
+              <>
+                <span className="bottom-nav-icon">
+                  <Icon name={item.icon} />
+                  {item.badge ? <span className="bottom-nav-badge">{item.badge}</span> : null}
+                </span>
+                <span>{item.label}</span>
+              </>
+            );
+
+            if (item.href) {
+              return <a key={item.label} href={item.href} className={className}>{content}</a>;
+            }
+
+            return <a key={item.label} type="button" className={className} onClick={item.onClick}>{content}</a>;
+          })}
         </nav>
       </div>
     </div>
@@ -1184,6 +1658,17 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
 
 
 
