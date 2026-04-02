@@ -335,6 +335,11 @@ function isValidIndianMobile(value) {
   return value.replace(/\D/g, "").length === 10;
 }
 
+function isIosDevice() {
+  return /iPad|iPhone|iPod/.test(window.navigator.userAgent) ||
+    (window.navigator.platform === "MacIntel" && window.navigator.maxTouchPoints > 1);
+}
+
 function Icon({ name }) {
   const common = {
     fill: "none",
@@ -1733,6 +1738,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
