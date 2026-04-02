@@ -691,6 +691,31 @@ function App() {
   const installPromptEventRef = useRef(null);
 
   useEffect(() => {
+    const timer = window.setTimeout(() => setLoading(false), 1200);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const syncRouteFromHash = () => {
+      const nextRoute = getRouteFromHash(window.location.hash);
+
+      setActivePage(nextRoute.page);
+
+      if (nextRoute.category) {
+        setActiveCategory(nextRoute.category);
+      }
+    };
+
+    syncRouteFromHash();
+    window.addEventListener("hashchange", syncRouteFromHash);
+    return () => window.removeEventListener("hashchange", syncRouteFromHash);
+  }, []);
+
+  const activeCategoryData = serviceCategories.find((category) => category.slug === activeCategory) || serviceCategories[0];
+  const activeBrands = categoryBrands[activeCategory] || [];
+  const cartCount = cartItems.length;
+  const attachedImageCount = cartItems.reduce((total, item) => total + item.images.length, 0);
+  useEffect(() => {
     const siteUrl = "https://ayushman-it.github.io/rsz-projects/";
     const routeHash = window.location.hash || "#home";
     const pageUrl = `${siteUrl}${routeHash}`;
@@ -1708,6 +1733,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
