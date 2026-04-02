@@ -6052,3 +6052,57 @@ button.bottom-nav-item {
     font-size: 0.74rem;
   }
 }
+
+.sticky-call-button {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(5.9rem + env(safe-area-inset-bottom));
+  z-index: 1170;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 46px;
+  padding: 0 0.95rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #111111 0%, #2f2f2f 100%);
+  color: #ffffff;
+  box-shadow: 0 18px 34px rgba(17, 17, 17, 0.22);
+}
+
+.sticky-call-icon {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.sticky-call-button span:last-child {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 767.98px) {
+  .install-prompt-card {
+    bottom: 10.25rem;
+  }
+
+  .sticky-call-button {
+    right: 0.75rem;
+    bottom: calc(5.85rem + env(safe-area-inset-bottom));
+    min-height: 42px;
+    padding: 0 0.82rem;
+  }
+
+  .sticky-call-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .sticky-call-button span:last-child {
+    font-size: 0.72rem;
+  }
+}

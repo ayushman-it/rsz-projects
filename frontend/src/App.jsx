@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ServicesPage from "./pages/Services";
 import AboutPage from "./pages/About";
 
@@ -631,7 +631,7 @@ function AuthModal({
               <div className="auth-form-stack">
                 <div className="auth-step-summary">
                   <p>OTP sent for signup</p>
-                  <strong>{activeName} � {maskMobileNumber(activeMobile)}</strong>
+                  <strong>{activeName} ? {maskMobileNumber(activeMobile)}</strong>
                 </div>
                 <label className="auth-field">
                   <span>Enter 4-digit OTP</span>
@@ -686,37 +686,14 @@ function App() {
   const [signupForm, setSignupForm] = useState(SIGNUP_FORM_INITIAL);
   const [otpCode, setOtpCode] = useState("");
   const [authFeedback, setAuthFeedback] = useState("");
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [installPromptMode, setInstallPromptMode] = useState(null);
   const reviewSliderRef = useRef(null);
   const installPromptEventRef = useRef(null);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setLoading(false), 1200);
-    return () => window.clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const syncRouteFromHash = () => {
-      const nextRoute = getRouteFromHash(window.location.hash);
-
-      setActivePage(nextRoute.page);
-
-      if (nextRoute.category) {
-        setActiveCategory(nextRoute.category);
-      }
-    };
-
-    syncRouteFromHash();
-    window.addEventListener("hashchange", syncRouteFromHash);
-    return () => window.removeEventListener("hashchange", syncRouteFromHash);
-  }, []);
-
-  const activeCategoryData = serviceCategories.find((category) => category.slug === activeCategory) || serviceCategories[0];
-  const activeBrands = categoryBrands[activeCategory] || [];
-  const cartCount = cartItems.length;
-  const attachedImageCount = cartItems.reduce((total, item) => total + item.images.length, 0);
-
-  useEffect(() => {
+    const siteUrl = "https://ayushman-it.github.io/rsz-projects/";
+    const routeHash = window.location.hash || "#home";
+    const pageUrl = `${siteUrl}${routeHash}`;
     const descriptionMap = {
       home: "Repair Service Zone helps customers browse appliance repair categories and reach doorstep service support faster.",
       services: `Browse ${activeCategoryData.label} repair services, appliance categories, and doorstep booking support from Repair Service Zone.`,
@@ -743,10 +720,67 @@ function App() {
       return element;
     };
 
+    const ensureLink = (selector, attributes) => {
+      let element = document.head.querySelector(selector);
+      if (!element) {
+        element = document.createElement("link");
+        Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+        document.head.appendChild(element);
+      }
+      return element;
+    };
+
     const description = descriptionMap[activePage] || descriptionMap.home;
     ensureMeta("meta[name=\"description\"]", { name: "description" }).setAttribute("content", description);
+    ensureMeta("meta[name=\"robots\"]", { name: "robots" }).setAttribute("content", "index,follow,max-image-preview:large");
     ensureMeta("meta[property=\"og:title\"]", { property: "og:title" }).setAttribute("content", document.title);
     ensureMeta("meta[property=\"og:description\"]", { property: "og:description" }).setAttribute("content", description);
+    ensureMeta("meta[property=\"og:type\"]", { property: "og:type" }).setAttribute("content", "website");
+    ensureMeta("meta[property=\"og:url\"]", { property: "og:url" }).setAttribute("content", pageUrl);
+    ensureMeta("meta[name=\"twitter:card\"]", { name: "twitter:card" }).setAttribute("content", "summary_large_image");
+    ensureMeta("meta[name=\"twitter:title\"]", { name: "twitter:title" }).setAttribute("content", document.title);
+    ensureMeta("meta[name=\"twitter:description\"]", { name: "twitter:description" }).setAttribute("content", description);
+    ensureLink("link[rel=\"canonical\"]", { rel: "canonical" }).setAttribute("href", pageUrl);
+
+    let structuredDataElement = document.head.querySelector("script[data-rsz-seo='true']");
+    if (!structuredDataElement) {
+      structuredDataElement = document.createElement("script");
+      structuredDataElement.type = "application/ld+json";
+      structuredDataElement.setAttribute("data-rsz-seo", "true");
+      document.head.appendChild(structuredDataElement);
+    }
+
+    structuredDataElement.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "LocalBusiness",
+          name: "Repair Service Zone",
+          url: siteUrl,
+          telephone: PHONE_NUMBER_DISPLAY,
+          description: "Doorstep appliance repair service in Bhopal for ACs, coolers, washing machines, refrigerators, and electronics.",
+          areaServed: "Bhopal, Madhya Pradesh",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "Shop number 225 MP Nagar zone 1 Near Vishal Mega Mart, Zone 8",
+            addressLocality: "Bhopal",
+            addressRegion: "Madhya Pradesh",
+            addressCountry: "IN"
+          }
+        },
+        {
+          "@type": "WebSite",
+          name: "Repair Service Zone",
+          url: siteUrl
+        },
+        {
+          "@type": "WebPage",
+          name: document.title,
+          url: pageUrl,
+          description
+        }
+      ]
+    });
   }, [activeCategoryData.label, activePage]);
 
   useEffect(() => {
@@ -765,20 +799,29 @@ function App() {
   useEffect(() => {
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
     const dismissed = window.localStorage.getItem("rsz-install-dismissed") === "true";
+    const iosDevice = isIosDevice();
 
     if (isStandalone || dismissed) {
       return undefined;
     }
 
+    let iosPromptTimer = null;
+
+    if (iosDevice) {
+      iosPromptTimer = window.setTimeout(() => {
+        setInstallPromptMode("ios");
+      }, 1800);
+    }
+
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault();
       installPromptEventRef.current = event;
-      setShowInstallPrompt(true);
+      setInstallPromptMode("native");
     };
 
     const handleAppInstalled = () => {
       installPromptEventRef.current = null;
-      setShowInstallPrompt(false);
+      setInstallPromptMode(null);
       window.localStorage.setItem("rsz-install-dismissed", "true");
     };
 
@@ -786,11 +829,13 @@ function App() {
     window.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
+      if (iosPromptTimer) {
+        window.clearTimeout(iosPromptTimer);
+      }
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
       window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
-
   const updateHashRoute = (hashValue, { replace = false } = {}) => {
     const nextUrl = `${window.location.pathname}${window.location.search}#${hashValue}`;
     const method = replace ? "replaceState" : "pushState";
@@ -1021,7 +1066,7 @@ function App() {
   };
 
   const handleDismissInstallPrompt = () => {
-    setShowInstallPrompt(false);
+    setInstallPromptMode(null);
     window.localStorage.setItem("rsz-install-dismissed", "true");
   };
 
@@ -1038,7 +1083,7 @@ function App() {
 
     if (outcome?.outcome === "accepted") {
       installPromptEventRef.current = null;
-      setShowInstallPrompt(false);
+      setInstallPromptMode(null);
       window.localStorage.setItem("rsz-install-dismissed", "true");
     }
   };
@@ -1533,7 +1578,7 @@ function App() {
           </div>
 
           <div className="footer-bottom-bar">
-            <p>Repair Service Zone � 2026. All Rights Reserved.</p>
+            <p>Repair Service Zone ? 2026. All Rights Reserved.</p>
             <div className="footer-payment-row" aria-label="Payment methods">
               {footerPayments.map((payment) => (
                 <span key={payment.type} className={`footer-payment-badge footer-payment-badge-${payment.type}`}>
@@ -1555,8 +1600,8 @@ function App() {
         </div>
       </footer>
 
-      {showInstallPrompt ? (
-        <InstallPromptCard onInstall={handleInstallApp} onDismiss={handleDismissInstallPrompt} />
+      {installPromptMode ? (
+        <InstallPromptCard mode={installPromptMode} onInstall={handleInstallApp} onDismiss={handleDismissInstallPrompt} />
       ) : null}
 
       {authModalOpen ? (
@@ -1631,6 +1676,11 @@ function App() {
         </div>
       ) : null}
 
+      <a href={`tel:${PHONE_NUMBER_TEL}`} className="sticky-call-button d-lg-none" aria-label={`Call ${PHONE_NUMBER_DISPLAY}`}>
+        <span className="sticky-call-icon"><Icon name="phone" /></span>
+        <span>Call Now</span>
+      </a>
+
       <div className="bottom-app-shell d-lg-none">
         <nav className="bottom-app-nav" aria-label="Bottom navigation">
           {bottomMenu.map((item) => {
@@ -1649,7 +1699,7 @@ function App() {
               return <a key={item.label} href={item.href} className={className}>{content}</a>;
             }
 
-            return <a key={item.label} type="button" className={className} onClick={item.onClick}>{content}</a>;
+            return <button key={item.label} type="button" className={className} onClick={item.onClick}>{content}</button>;
           })}
         </nav>
       </div>
@@ -1658,6 +1708,11 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
 
 
 
