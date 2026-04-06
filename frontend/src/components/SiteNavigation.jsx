@@ -285,6 +285,7 @@ export default function SiteNavigation({
                 <NavigationLink active={activePage === "services"} onClick={() => onNavigateServices()}>Services</NavigationLink>
                 <NavigationLink onClick={onNavigateHome}>About</NavigationLink>
                 <NavigationLink href={`tel:${PHONE_NUMBER_TEL}`}>Contact</NavigationLink>
+                <NavigationLink href="/admin/index.html">Admin Login</NavigationLink>
                 <NavigationLink onClick={onNavigateHome}>Blog</NavigationLink>
                 <NavigationLink>Login / Signup</NavigationLink>
                 <NavigationLink active={activePage === "cart"} onClick={onNavigateCart}>Cart</NavigationLink>
@@ -319,6 +320,7 @@ export default function SiteNavigation({
                     <button key={item.label} type="button" className="offcanvas-link-button" onClick={item.onClick}>{item.label}</button>
                   )
                 ))}
+                <a href="/admin/index.html">Admin Login</a>
                 <button type="button" className="offcanvas-link-button" onClick={closeMenu}>Login / Signup</button>
                 <button type="button" className="offcanvas-link-button" onClick={() => { onNavigateCart(); closeMenu(); }}>Cart</button>
               </nav>

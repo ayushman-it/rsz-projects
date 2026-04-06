@@ -5,6 +5,7 @@ import AboutPage from "./pages/About";
 const PHONE_NUMBER_DISPLAY = "+91 9522675728";
 const PHONE_NUMBER_TEL = "+919522675728";
 const WHATSAPP_URL = "https://wa.me/919522675728";
+const ADMIN_DASHBOARD_PATH = "/admin/index.html";
 
 const AUTH_VIEW = {
   LOGIN: "login",
@@ -27,6 +28,8 @@ const SIGNUP_FORM_INITIAL = {
 };
 
 const DEMO_OTP = "4826";
+const ADMIN_DEMO_USERNAME = "admin@repairservicezone.com";
+const ADMIN_DEMO_PASSWORD = "admin123";
 
 const promoCards = [
   {
@@ -658,6 +661,90 @@ function AuthModal({
   );
 }
 
+function AdminLoginModal({
+  mode,
+  username,
+  password,
+  phone,
+  otp,
+  feedback,
+  onClose,
+  onModeChange,
+  onUsernameChange,
+  onPasswordChange,
+  onPhoneChange,
+  onOtpChange,
+  onPasswordSubmit,
+  onOtpSubmit,
+}) {
+  const isPasswordMode = mode === "password";
+
+  return (
+    <div className="auth-modal-backdrop" role="presentation" onClick={onClose}>
+      <div className="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="adminLoginTitle" onClick={(event) => event.stopPropagation()}>
+        <div className="auth-modal-header">
+          <div>
+            <p className="auth-modal-kicker">Admin Access</p>
+            <h2 id="adminLoginTitle">Login to the admin dashboard</h2>
+            <p className="auth-modal-copy">Use dummy admin credentials for now, or continue with OTP and jump directly to the dashboard because backend auth is not connected yet.</p>
+          </div>
+          <button type="button" className="auth-modal-close" aria-label="Close admin login modal" onClick={onClose}>
+            <Icon name="close" />
+          </button>
+        </div>
+
+        <div className="auth-switch" role="tablist" aria-label="Admin login mode">
+          <button type="button" className={isPasswordMode ? "auth-switch-button auth-switch-button-active" : "auth-switch-button"} onClick={() => onModeChange("password")}>
+            Username / Password
+          </button>
+          <button type="button" className={!isPasswordMode ? "auth-switch-button auth-switch-button-active" : "auth-switch-button"} onClick={() => onModeChange("otp")}>
+            OTP Login
+          </button>
+        </div>
+
+        <div className="auth-flow-card">
+          {isPasswordMode ? (
+            <form className="auth-form-stack" onSubmit={onPasswordSubmit}>
+              <label className="auth-field">
+                <span>Admin username</span>
+                <input type="email" autoComplete="username" placeholder="Enter admin username" value={username} onChange={onUsernameChange} />
+              </label>
+              <label className="auth-field">
+                <span>Password</span>
+                <input type="password" autoComplete="current-password" placeholder="Enter password" value={password} onChange={onPasswordChange} />
+              </label>
+              <div className="auth-step-summary">
+                <p>Dummy admin credentials</p>
+                <strong>{ADMIN_DEMO_USERNAME}</strong>
+                <strong>{ADMIN_DEMO_PASSWORD}</strong>
+              </div>
+              <button type="submit" className="auth-submit-button">Open Admin Dashboard</button>
+            </form>
+          ) : (
+            <form className="auth-form-stack" onSubmit={onOtpSubmit}>
+              <label className="auth-field">
+                <span>Mobile number</span>
+                <input type="tel" inputMode="numeric" autoComplete="tel" placeholder="Enter mobile number" value={phone} onChange={onPhoneChange} />
+              </label>
+              <label className="auth-field">
+                <span>OTP</span>
+                <input type="text" inputMode="numeric" autoComplete="one-time-code" placeholder="Enter any OTP" value={otp} onChange={onOtpChange} maxLength={6} />
+              </label>
+              <div className="auth-step-summary">
+                <p>Current dummy OTP behavior</p>
+                <strong>No verification is required right now.</strong>
+              </div>
+              <button type="submit" className="auth-submit-button">Continue to Dashboard</button>
+            </form>
+          )}
+        </div>
+
+        {feedback ? <p className="auth-feedback">{feedback}</p> : null}
+      </div>
+    </div>
+  );
+}
+
 function InstallPromptCard({ onInstall, onDismiss }) {
   return (
     <div className="install-prompt-card" role="dialog" aria-live="polite" aria-label="Install Repair Service Zone app">
@@ -691,6 +778,13 @@ function App() {
   const [signupForm, setSignupForm] = useState(SIGNUP_FORM_INITIAL);
   const [otpCode, setOtpCode] = useState("");
   const [authFeedback, setAuthFeedback] = useState("");
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [adminLoginMode, setAdminLoginMode] = useState("password");
+  const [adminUsername, setAdminUsername] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
+  const [adminPhone, setAdminPhone] = useState("");
+  const [adminOtp, setAdminOtp] = useState("");
+  const [adminFeedback, setAdminFeedback] = useState("");
   const [installPromptMode, setInstallPromptMode] = useState(null);
   const reviewSliderRef = useRef(null);
   const installPromptEventRef = useRef(null);
@@ -814,7 +908,7 @@ function App() {
   }, [activeCategoryData.label, activePage]);
 
   useEffect(() => {
-    if (!authModalOpen && !bookingModalOpen) {
+    if (!authModalOpen && !adminModalOpen && !bookingModalOpen) {
       return undefined;
     }
 
@@ -824,7 +918,7 @@ function App() {
     return () => {
       document.body.style.overflow = previousOverflow;
     };
-  }, [authModalOpen, bookingModalOpen]);
+  }, [authModalOpen, adminModalOpen, bookingModalOpen]);
 
   useEffect(() => {
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
@@ -1026,6 +1120,47 @@ function App() {
     setAuthFeedback("");
   };
 
+  const handleOpenAdminModal = (mode = "password") => {
+    setAdminLoginMode(mode);
+    setAdminFeedback("");
+    setAdminModalOpen(true);
+  };
+
+  const handleCloseAdminModal = () => {
+    setAdminModalOpen(false);
+    setAdminLoginMode("password");
+    setAdminUsername("");
+    setAdminPassword("");
+    setAdminPhone("");
+    setAdminOtp("");
+    setAdminFeedback("");
+  };
+
+  const handleAdminModeChange = (mode) => {
+    setAdminLoginMode(mode);
+    setAdminFeedback("");
+  };
+
+  const redirectToAdminDashboard = () => {
+    window.location.assign(ADMIN_DASHBOARD_PATH);
+  };
+
+  const handleAdminPasswordSubmit = (event) => {
+    event.preventDefault();
+
+    if (adminUsername.trim() !== ADMIN_DEMO_USERNAME || adminPassword !== ADMIN_DEMO_PASSWORD) {
+      setAdminFeedback("Use the dummy admin username and password shown in the modal.");
+      return;
+    }
+
+    redirectToAdminDashboard();
+  };
+
+  const handleAdminOtpSubmit = (event) => {
+    event.preventDefault();
+    redirectToAdminDashboard();
+  };
+
   const handleAuthModeChange = (mode) => {
     setAuthView(mode);
     setAuthStep(mode === AUTH_VIEW.LOGIN ? AUTH_STEP.LOGIN_MOBILE : AUTH_STEP.SIGNUP_DETAILS);
@@ -1183,6 +1318,7 @@ function App() {
                 <a href="#services" className={activePage === "services" ? "nav-link-item nav-link-active" : "nav-link-item"}>Services</a>
                 <a href="#about" className={activePage === "about" ? "nav-link-item nav-link-active" : "nav-link-item"}>About</a>
                 <a href={`tel:${PHONE_NUMBER_TEL}`} className="nav-link-item">Contact</a>
+                <button type="button" className="nav-link-item nav-link-button" onClick={() => handleOpenAdminModal("password")}>Admin Login</button>
                 <button type="button" className="nav-link-item nav-link-button" onClick={() => handleOpenAuthModal(AUTH_VIEW.LOGIN)}>Login / Signup</button>
                 <a href="#cart" className="nav-link-item">Cart</a>
               </nav>
@@ -1211,6 +1347,7 @@ function App() {
               <a href="#services" data-bs-dismiss="offcanvas">Services</a>
               <a href="#about" data-bs-dismiss="offcanvas">About</a>
               <a href={`tel:${PHONE_NUMBER_TEL}`} data-bs-dismiss="offcanvas">Contact</a>
+              <button type="button" className="offcanvas-link-button" data-bs-dismiss="offcanvas" onClick={() => handleOpenAdminModal("password")}>Admin Login</button>
               <button type="button" className="offcanvas-link-button" data-bs-dismiss="offcanvas" onClick={() => handleOpenAuthModal(AUTH_VIEW.LOGIN)}>Login / Signup</button>
               <a href="#cart" data-bs-dismiss="offcanvas">Cart</a>
             </nav>
@@ -1651,6 +1788,25 @@ function App() {
           onOtpCodeChange={(event) => setOtpCode(event.target.value.replace(/\D/g, "").slice(0, 4))}
           onVerifyOtp={handleVerifyOtp}
           onBack={handleBackFromOtp}
+        />
+      ) : null}
+
+      {adminModalOpen ? (
+        <AdminLoginModal
+          mode={adminLoginMode}
+          username={adminUsername}
+          password={adminPassword}
+          phone={adminPhone}
+          otp={adminOtp}
+          feedback={adminFeedback}
+          onClose={handleCloseAdminModal}
+          onModeChange={handleAdminModeChange}
+          onUsernameChange={(event) => setAdminUsername(event.target.value)}
+          onPasswordChange={(event) => setAdminPassword(event.target.value)}
+          onPhoneChange={(event) => setAdminPhone(event.target.value)}
+          onOtpChange={(event) => setAdminOtp(event.target.value.replace(/\D/g, "").slice(0, 6))}
+          onPasswordSubmit={handleAdminPasswordSubmit}
+          onOtpSubmit={handleAdminOtpSubmit}
         />
       ) : null}
 
