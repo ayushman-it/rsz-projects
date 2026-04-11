@@ -37,7 +37,68 @@ img { display: block; max-width: 100%; }
 .auth-shell {
   display: grid;
   place-items: center;
-  padding: 1.2rem;
+  padding: clamp(1rem, 2vw, 1.6rem);
+}
+
+.auth-layout {
+  width: min(1180px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(340px, 420px);
+  gap: clamp(1rem, 2vw, 1.6rem);
+  align-items: stretch;
+}
+
+.auth-spotlight {
+  display: grid;
+  align-content: center;
+  gap: 1.15rem;
+  padding: clamp(1.2rem, 3vw, 2.2rem);
+  border-radius: clamp(24px, 3vw, 34px);
+  background:
+    radial-gradient(circle at top right, rgba(96, 165, 250, 0.22), transparent 30%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 247, 255, 0.84));
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow);
+}
+
+.auth-spotlight h1 {
+  max-width: 14ch;
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  letter-spacing: -0.04em;
+}
+
+.auth-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.auth-highlight {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.auth-highlight span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.auth-highlight strong {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.2;
+}
+
+.auth-highlight p {
+  margin: 0;
+  color: var(--muted);
 }
 
 .auth-card,
@@ -52,9 +113,10 @@ img { display: block; max-width: 100%; }
 }
 
 .auth-card {
-  width: min(100%, 540px);
-  padding: 1.4rem;
+  width: 100%;
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
   margin-inline: auto;
+  align-self: center;
 }
 
 .auth-brand,
@@ -196,6 +258,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .demo-box, .ticket-card, .sidebar-note, .metric-box, .board-column, .upload-tile, .stat-panel { padding: 1rem; }
+.demo-box strong { display: block; margin-bottom: 0.35rem; }
 
 .primary-button {
   border: 0;
@@ -241,7 +304,7 @@ input:focus, select:focus, textarea:focus {
 .sidebar-backdrop { display: none; }
 
 .main-area { min-width: 0; padding: clamp(0.85rem, 1.8vw, 1.2rem); }
-.topbar { display: flex; justify-content: space-between; gap: 1rem; padding: clamp(0.95rem, 1.8vw, 1.2rem); }
+.topbar { display: flex; justify-content: space-between; gap: 1rem; padding: clamp(0.95rem, 1.8vw, 1.2rem); position: sticky; top: 0; z-index: 20; }
 .menu-button { display: none; width: 44px; height: 44px; border: 0; border-radius: 14px; background: rgba(15,23,42,.06); }
 .search-input { min-width: min(320px, 100%); }
 .topbar-copy { min-width: 0; flex: 1; display: flex; gap: 0.9rem; align-items: flex-start; }
@@ -341,6 +404,10 @@ input:focus, select:focus, textarea:focus {
 .empty-state { padding-top: 1rem; }
 
 @media (max-width: 1180px) {
+  .auth-layout { grid-template-columns: 1fr; }
+  .auth-spotlight { order: 2; }
+  .auth-card { max-width: 560px; }
+  .auth-highlights { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hero-panel,
   .content-grid,
   .stats-grid,
@@ -351,6 +418,50 @@ input:focus, select:focus, textarea:focus {
   .board-grid,
   .board-grid-status { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .topbar-tools { width: min(100%, 420px); }
+}
+
+@media (max-width: 860px) {
+  .topbar {
+    position: static;
+  }
+  .board-grid-status,
+  .stats-grid,
+  .stats-grid.compact { grid-template-columns: 1fr; }
+  .table-shell { overflow: visible; }
+  .data-table { min-width: 0; }
+  .data-table thead { display: none; }
+  .data-table tbody { display: grid; gap: 0.85rem; }
+  .data-table tr {
+    display: grid;
+    gap: 0.7rem;
+    padding: 0.95rem;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--card);
+  }
+  .data-table td {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0;
+    border-bottom: 0;
+  }
+  .data-table td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .data-table td[data-label="Preview"]::before { margin-bottom: 0.15rem; }
+  .status-menu { width: 100%; }
+  .status-chip { width: 100%; justify-content: space-between; }
+  .status-popover {
+    position: static;
+    margin-top: 0.55rem;
+    min-width: 0;
+    max-width: none;
+  }
 }
 
 @media (max-width: 960px) {
@@ -396,6 +507,9 @@ input:focus, select:focus, textarea:focus {
   .topbar-copy { flex-direction: column; gap: 0.75rem; }
   .topbar h1 { font-size: 1.45rem; }
   .hero-panel { gap: 0.85rem; }
+  .auth-spotlight { padding: 1rem; }
+  .auth-spotlight h1 { max-width: none; font-size: 1.85rem; }
+  .auth-highlights { grid-template-columns: 1fr; }
   .stats-grid,
   .stats-grid.compact,
   .settings-grid,
@@ -436,41 +550,6 @@ input:focus, select:focus, textarea:focus {
     grid-auto-flow: column;
     grid-auto-columns: minmax(92px, 1fr);
   }
-  .table-shell { overflow: visible; }
-  .data-table { min-width: 0; }
-  .data-table thead { display: none; }
-  .data-table tbody { display: grid; gap: 0.85rem; }
-  .data-table tr {
-    display: grid;
-    gap: 0.7rem;
-    padding: 0.95rem;
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    background: var(--card);
-  }
-  .data-table td {
-    display: grid;
-    gap: 0.25rem;
-    padding: 0;
-    border-bottom: 0;
-  }
-  .data-table td::before {
-    content: attr(data-label);
-    color: var(--muted);
-    font-size: 0.72rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .data-table td[data-label="Preview"]::before { margin-bottom: 0.15rem; }
-  .status-menu { width: 100%; }
-  .status-chip { width: 100%; justify-content: space-between; }
-  .status-popover {
-    position: static;
-    margin-top: 0.55rem;
-    min-width: 0;
-    max-width: none;
-  }
 }
 
 @media (max-width: 540px) {
@@ -484,6 +563,7 @@ input:focus, select:focus, textarea:focus {
   .stat-panel strong,
   .spotlight strong { font-size: 1.5rem; }
   .bar-chart { min-width: 460px; }
+  .auth-spotlight h1 { font-size: 1.65rem; }
   .ticket-card,
   .metric-box,
   .stat-panel,

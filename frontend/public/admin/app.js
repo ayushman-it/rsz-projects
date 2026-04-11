@@ -133,35 +133,64 @@ function topbarMeta() {
 function renderLogin() {
   return `
     <div class="auth-shell">
-      <div class="auth-card">
-        <div class="auth-brand">
-          <div class="brand-mark">RSZ</div>
-          <div>
-            <p class="eyebrow">Repair Service Zone</p>
-            <h1>Admin Login</h1>
-            <p class="subtle">Dummy auth only for now. OTP login jumps directly to dashboard because backend auth is not connected yet.</p>
+      <div class="auth-layout">
+        <section class="auth-spotlight">
+          <div class="auth-brand">
+            <div class="brand-mark">RSZ</div>
+            <div>
+              <p class="eyebrow accent">Repair Service Zone</p>
+              <h1>Admin control center for queries, tickets, and service operations.</h1>
+              <p class="subtle">Preview the admin side with dummy login. OTP flow skips verification for now and opens the dashboard directly because backend auth is not connected yet.</p>
+            </div>
           </div>
+          <div class="auth-highlights">
+            <article class="auth-highlight">
+              <span>Ticket flow</span>
+              <strong>Pending, Ongoing, Resolved</strong>
+              <p>Track every issue stage without leaving the dashboard.</p>
+            </article>
+            <article class="auth-highlight">
+              <span>Responsive workspace</span>
+              <strong>Built for laptop, tablet, and mobile</strong>
+              <p>Sidebar, tables, forms, and cards reorganize for smaller screens.</p>
+            </article>
+            <article class="auth-highlight">
+              <span>Quick setup</span>
+              <strong>Dummy admin access</strong>
+              <p>Use sample username and password or continue with any OTP to test the UI.</p>
+            </article>
+          </div>
+        </section>
+        <div class="auth-card">
+          <div class="auth-brand">
+            <div class="brand-mark">RSZ</div>
+            <div>
+              <p class="eyebrow">Admin Access</p>
+              <h2>Admin Login</h2>
+              <p class="subtle">Use the demo access below to open the admin dashboard preview.</p>
+            </div>
+          </div>
+          <div class="auth-mode-row">
+            <button class="auth-mode ${state.authMode === "password" ? "auth-mode-active" : ""}" data-auth-mode="password">Username / Password</button>
+            <button class="auth-mode ${state.authMode === "otp" ? "auth-mode-active" : ""}" data-auth-mode="otp">OTP Login</button>
+          </div>
+          ${
+            state.authMode === "password"
+              ? `<form id="password-login-form" class="auth-form">
+                  <label><span>Username</span><input name="username" placeholder="admin@repairservicezone.com" /></label>
+                  <label><span>Password</span><input type="password" name="password" placeholder="admin123" /></label>
+                  <div class="demo-box"><strong>Dummy credentials</strong><span>${dummyCredentials.username}</span><span>${dummyCredentials.password}</span></div>
+                  <button class="primary-button" type="submit">Login to Dashboard</button>
+                </form>`
+              : `<form id="otp-login-form" class="auth-form">
+                  <label><span>Mobile Number</span><input name="mobile" placeholder="+91 95XXXXXXXX" /></label>
+                  <label><span>OTP</span><input name="otp" placeholder="0000" /></label>
+                  <div class="demo-box"><strong>OTP login behavior</strong><span>No auth check right now.</span><span>Clicking continue opens dashboard directly.</span></div>
+                  <button class="primary-button" type="submit">Continue with OTP</button>
+                </form>`
+          }
+          ${state.loginMessage ? `<p class="notice">${escapeHtml(state.loginMessage)}</p>` : ""}
         </div>
-        <div class="auth-mode-row">
-          <button class="auth-mode ${state.authMode === "password" ? "auth-mode-active" : ""}" data-auth-mode="password">Username / Password</button>
-          <button class="auth-mode ${state.authMode === "otp" ? "auth-mode-active" : ""}" data-auth-mode="otp">OTP Login</button>
-        </div>
-        ${
-          state.authMode === "password"
-            ? `<form id="password-login-form" class="auth-form">
-                <label><span>Username</span><input name="username" placeholder="admin@repairservicezone.com" /></label>
-                <label><span>Password</span><input type="password" name="password" placeholder="admin123" /></label>
-                <div class="demo-box"><strong>Dummy credentials</strong><span>${dummyCredentials.username}</span><span>${dummyCredentials.password}</span></div>
-                <button class="primary-button" type="submit">Login to Dashboard</button>
-              </form>`
-            : `<form id="otp-login-form" class="auth-form">
-                <label><span>Mobile Number</span><input name="mobile" placeholder="+91 95XXXXXXXX" /></label>
-                <label><span>OTP</span><input name="otp" placeholder="0000" /></label>
-                <div class="demo-box"><strong>OTP login behavior</strong><span>No auth check right now.</span><span>Clicking continue opens dashboard directly.</span></div>
-                <button class="primary-button" type="submit">Continue with OTP</button>
-              </form>`
-        }
-        ${state.loginMessage ? `<p class="notice">${escapeHtml(state.loginMessage)}</p>` : ""}
       </div>
     </div>
   `;

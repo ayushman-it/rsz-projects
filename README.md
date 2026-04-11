@@ -1,64 +1,130 @@
-# Repair Service Zone
+# 🔧 Repair Service Zone
 
-Repair Service Zone is a starter monorepo for a repair-services web application.
+Repair Service Zone is a full-stack web application designed to simplify appliance repair services with a structured booking, ticketing, and admin management system.
 
-This setup includes:
+---
 
-- A React + Vite + Tailwind CSS frontend
-- A PHP backend structure for future API work
-- A MySQL schema placeholder for service, booking, and customer data
+## 🚀 Core Features
 
-## Project Structure
+### 👤 User Module
+
+Users can:
+
+- Sign in using:
+  - Google Authentication
+  - Manual Registration (Email & Password)
+
+- Browse services:
+  - AC Repair
+  - Refrigerator Repair
+  - Washing Machine
+  - TV
+  - Microwave
+  - Cooler & other electronics
+
+---
+
+## 🛠️ Service Booking Flow
+
+1. User selects a service (e.g., Refrigerator not working)
+2. User fills booking form:
+   - Issue description  
+   - Upload image(s)  
+   - Phone number  
+   - Address  
+3. System generates a **Service Ticket**
+4. Ticket is stored in database
+5. Ticket appears in **Admin Dashboard**
+
+---
+
+## 🎫 Ticket Management System
+
+Each ticket includes:
+
+- Ticket ID  
+- User details  
+- Service type  
+- Issue description  
+- Uploaded images  
+- Address & contact info  
+- Status  
+- Assigned agent  
+- Priority level  
+
+---
+
+## 🧑‍💼 Admin Dashboard
+
+### 🔹 Manage Tickets
+
+- View all service requests  
+- Update ticket status:
+  - Pending  
+  - Ongoing  
+  - Completed  
+  - Not Fixable  
+- Set priority:
+  - Low / Medium / High  
+- Assign service agents  
+
+---
+
+### 🔹 Agent Management
+
+- Add / Remove / Update agents  
+- Assign agents to tickets  
+- Track agent performance  
+
+---
+
+### 🔹 Service Management
+
+Admin can:
+
+- Add new services  
+- Edit/remove services  
+- Add:
+  - Service name  
+  - Description  
+  - Image  
+  - Supported brands  
+- (No price required initially)
+
+---
+
+## 💰 Billing & Revenue
+
+- Admin can:
+  - Accept service charges from users  
+  - Generate bills  
+  - Track payments  
+
+- Dashboard shows:
+  - Total revenue  
+  - Sales analytics  
+  - Completed services  
+  - Pending payments  
+
+---
+
+## 🗄️ Database Structure (High-Level)
+
+Key tables:
+
+- Users  
+- Services  
+- Tickets  
+- Ticket_Images  
+- Agents  
+- Assignments  
+- Payments / Revenue  
+
+---
+
+## ⚙️ Project Structure
 
 ```text
 Repair Service Zone/
-|- frontend/   # React + Tailwind landing page and future client app
-|- backend/    # PHP API skeleton and MySQL setup files
-```
-
-## Frontend
-
-The frontend is scaffolded with:
-
-- React
-- Vite
-- Tailwind CSS
-
-The initial UI includes a styled homepage for browsing repair categories like AC, cooler, refrigerator, TV, washing machine, microwave, and more.
-
-## Backend
-
-The backend is intentionally setup-only. It includes:
-
-- `public/` entry point
-- `app/` for controllers, models, and core classes
-- `routes/` for route definitions
-- `config/` for app and database configuration
-- `database/schema.sql` for initial MySQL tables
-
-No real backend logic has been implemented yet.
-
-## Next Steps
-
-1. Install frontend dependencies in `frontend/`
-2. Setup a PHP local server for `backend/public`
-3. Create REST APIs for services, bookings, authentication, and dashboard features
-4. Connect the React frontend to the PHP backend
-
-## GitHub Pages Deployment
-
-The repository includes a GitHub Actions workflow that deploys only the frontend to GitHub Pages.
-
-Files involved:
-
-- `.github/workflows/deploy-frontend-pages.yml`
-- `frontend/vite.config.js`
-
-How to publish:
-
-1. Push this repository to GitHub
-2. Open repository `Settings > Pages`
-3. Set the source to `GitHub Actions`
-4. Push to the `main` branch or run the workflow manually
-
-The workflow builds `frontend/` and publishes `frontend/dist` to GitHub Pages.
+|- frontend/   # React + Tailwind client application
+|- backend/    # PHP API (REST architecture)
