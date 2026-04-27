@@ -5,7 +5,7 @@ import AboutPage from "./pages/About";
 const PHONE_NUMBER_DISPLAY = "+91 9522675728";
 const PHONE_NUMBER_TEL = "+919522675728";
 const WHATSAPP_URL = "https://wa.me/919522675728";
-const ADMIN_DASHBOARD_PATH = "/admin/index.html";
+const ADMIN_DASHBOARD_PATH = `${import.meta.env.BASE_URL}admin/index.html`;
 
 const AUTH_VIEW = {
   LOGIN: "login",

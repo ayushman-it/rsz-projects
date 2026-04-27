@@ -194,6 +194,8 @@ export default function SiteNavigation({
   onNavigateCart,
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const adminPortalHref = `${import.meta.env.BASE_URL}admin/index.html`;
+  const agentPortalHref = `${import.meta.env.BASE_URL}agent/index.html`;
 
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
@@ -285,7 +287,8 @@ export default function SiteNavigation({
                 <NavigationLink active={activePage === "services"} onClick={() => onNavigateServices()}>Services</NavigationLink>
                 <NavigationLink onClick={onNavigateHome}>About</NavigationLink>
                 <NavigationLink href={`tel:${PHONE_NUMBER_TEL}`}>Contact</NavigationLink>
-                <NavigationLink href="/admin/index.html">Admin Login</NavigationLink>
+                <NavigationLink href={adminPortalHref}>Admin Login</NavigationLink>
+                <NavigationLink href={agentPortalHref}>Agent Login</NavigationLink>
                 <NavigationLink onClick={onNavigateHome}>Blog</NavigationLink>
                 <NavigationLink>Login / Signup</NavigationLink>
                 <NavigationLink active={activePage === "cart"} onClick={onNavigateCart}>Cart</NavigationLink>
@@ -320,7 +323,8 @@ export default function SiteNavigation({
                     <button key={item.label} type="button" className="offcanvas-link-button" onClick={item.onClick}>{item.label}</button>
                   )
                 ))}
-                <a href="/admin/index.html">Admin Login</a>
+                <a href={adminPortalHref}>Admin Login</a>
+                <a href={agentPortalHref}>Agent Login</a>
                 <button type="button" className="offcanvas-link-button" onClick={closeMenu}>Login / Signup</button>
                 <button type="button" className="offcanvas-link-button" onClick={() => { onNavigateCart(); closeMenu(); }}>Cart</button>
               </nav>
